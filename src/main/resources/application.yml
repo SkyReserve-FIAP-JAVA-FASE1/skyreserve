@@ -1,0 +1,21 @@
+server:
+  port: ${PORT:8080}
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    topic: ${TOPIC:teste}
+    consumer:
+      group-id: ${GROUP_CONSUMER:grupo-sky}
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  r2dbc:
+    url: ${POSTGRES_URL:r2dbc:postgresql://localhost:5432/skyreserve}
+    username: ${POSTGRES_USER:teste}
+    password: ${POSTGRES_PASS:teste}
+    pool:
+      enabled: true
+      max-size: 20
