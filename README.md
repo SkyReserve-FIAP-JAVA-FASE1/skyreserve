@@ -4,12 +4,7 @@
 - Para iniciar o Kafka utilize o docker-compose irá subir o Kafka, KafkaDrop para ver os tópicos, ZooKeeper, e o PostgreSQL. Todos dentro do container skyreservedb.
 - O Kafka Drop utilizamos para visualizar os tópicos pelo navegador. (http://localhost:9000/)
 - URL para utilizar no postman e startar a aplicação (POST e o BODY): http://localhost:8080/
-
-Body:
-{
-"nome": "Fulano",
-"telefone": "(11) 91234-5678"
-}
+- Na pasta Collections estão os dados para fazer as requisições no postman. 
 
 ## Pré-requisitos
 
