@@ -23,11 +23,6 @@ public class ReservaController {
     @Autowired
     private SolicitarReservaService service;
 
-    @GetMapping("/teste")
-    public void teste() {
-        System.out.println("OK");
-    }
-
     @PostMapping("/iniciar")
     public Mono<Void> start(@RequestBody ReservaDTO reservaDTO) throws IOException {
         log.info("Iniciando a aplicação.");
