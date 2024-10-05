@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class KafkaReactiveConsumer {
+public class KafkaConsumer {
 
     @Autowired
     SolicitarReservaService reservaService;
