@@ -1,10 +1,10 @@
 # Projeto SKYRESERVE
 
-- Este projeto por enquando demonstra um CRUD básico com Java com o PostgreSQL Local e Kafka utilizando Docker.
-- Para iniciar o Kafka utilize o docker-compose irá subir o Kafka, KafkaDrop para ver os tópicos, ZooKeeper, e o PostgreSQL. Todos dentro do container skyreservedb.
+- Este projeto por enquando demonstra um CRUD básico com Java com o H2-Console Local e Kafka utilizando Docker.
+- Para iniciar o Kafka utilize o docker-compose irá subir o Kafka, KafkaDrop para ver os tópicos, ZooKeeper, e o H2-Console. Todos dentro do container skyreservedb.
 - O Kafka Drop utilizamos para visualizar os tópicos pelo navegador. (http://localhost:9000/)
 - URL para utilizar no postman e startar a aplicação (POST e o BODY): http://localhost:8080/
-- Na pasta Collections estão os dados para fazer as requisições no postman. 
+- Na pasta Collections estão os dados para fazer as requisições no postman (collection/SkyReserve.postman_collection.json). 
 - As variáveis de ambiente estão na pasta env.
 - Ao iniciar a aplicação, não se esqueça de verificar se existe o tópico (teste) no KafkaDrop: http://localhost:9000
 
