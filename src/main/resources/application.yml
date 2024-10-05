@@ -14,20 +14,14 @@ spring:
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
     topic:
       name: ${TOPIC:teste}
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-    datasource:
-      url: jdbc:h2:mem:db
-      username: sa
-      password: password
-      driver-class-name: org.h2.Driver
+  datasource:
+    url: ${URL_SQL_SERVER:jdbc:sqlserver://localhost:1433;databaseName=skyreserve;encrypt=false}
+    username: ${USER_SQL_SERVER:sa}
+    password: ${PASS_SQL_SERVER:SkyReserve2024}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
+      dialect: org.hibernate.dialect.SQLServerDialect
       show_sql: false
       format_sql: true
       ddl-auto: update
-  datasource:
-    initialization-mode: always

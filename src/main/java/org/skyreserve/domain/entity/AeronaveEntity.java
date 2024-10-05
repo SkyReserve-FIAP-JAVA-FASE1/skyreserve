@@ -13,6 +13,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "aeronave")
 public class AeronaveEntity implements Serializable {
 
     @Id

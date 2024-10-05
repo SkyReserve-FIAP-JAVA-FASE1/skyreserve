@@ -6,6 +6,7 @@
 - URL para utilizar no postman e startar a aplicação (POST e o BODY): http://localhost:8080/
 - Na pasta Collections estão os dados para fazer as requisições no postman (collection/SkyReserve.postman_collection.json). 
 - As variáveis de ambiente estão na pasta env.
+- Antes de iniciar a aplicação, inicie o docker compose e crie um banco de dados chamado: skyreserve.
 - Ao iniciar a aplicação, não se esqueça de verificar se existe o tópico (teste) no KafkaDrop: http://localhost:9000
 
 ## Pré-requisitos

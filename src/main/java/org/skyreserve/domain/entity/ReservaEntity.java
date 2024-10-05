@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "reserva")
 public class ReservaEntity implements Serializable {
 
     @Id

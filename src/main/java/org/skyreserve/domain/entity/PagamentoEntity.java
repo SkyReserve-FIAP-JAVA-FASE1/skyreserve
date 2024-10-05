@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "pagamento")
 public class PagamentoEntity implements Serializable {
 
     @Id
