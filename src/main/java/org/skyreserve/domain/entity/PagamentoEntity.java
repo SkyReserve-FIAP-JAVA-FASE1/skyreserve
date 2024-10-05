@@ -36,6 +36,5 @@ public class PagamentoEntity implements Serializable {
 
     private boolean bagagem = false;
     private TipoVooEnum tipoVoo = TipoVooEnum.IDA_E_VOLTA;
-    private BigDecimal valorReserva = BigDecimal.ZERO;
 
 }

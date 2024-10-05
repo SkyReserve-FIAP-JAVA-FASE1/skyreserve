@@ -3,11 +3,9 @@ package org.skyreserve.app.service.postgres;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.ReservaDTO;
 import org.skyreserve.domain.entity.ReservaEntity;
-import org.skyreserve.domain.entity.VooEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
