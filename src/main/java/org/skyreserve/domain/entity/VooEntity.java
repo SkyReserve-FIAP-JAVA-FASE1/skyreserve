@@ -1,11 +1,14 @@
 
 package org.skyreserve.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import javax.persistence.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,28 +18,26 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("voo")
+@Entity
 public class VooEntity implements Serializable {
 
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column("origem")
     @NotBlank(message = "A origem não pode estar vazia.")
     private String origem;
 
-    @Column("destino")
     @NotBlank(message = "O destino não pode estar vazio.")
     private String destino;
 
-    @Column("dataHoraPartida")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataHoraPartida;
 
-    @Column("dataHoraChegada")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataHoraChegada;
 
-    @Column("aeronave")
+    @ManyToOne
     private AeronaveEntity aeronave;
 
 }

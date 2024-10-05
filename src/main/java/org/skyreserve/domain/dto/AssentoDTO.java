@@ -1,12 +1,6 @@
 package org.skyreserve.domain.dto;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
-import javax.persistence.ManyToOne;
-import java.io.Serializable;
 
 @Getter
 @Setter

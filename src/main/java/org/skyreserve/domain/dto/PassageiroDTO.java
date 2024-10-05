@@ -1,5 +1,6 @@
 package org.skyreserve.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,7 +23,10 @@ public class PassageiroDTO {
     private String cpf;
     private String email;
     private String numeroPassaporte;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
+
     private String celular;
 
     public PassageiroDTO(PassageiroDTO passageiroDTO) {

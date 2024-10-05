@@ -1,16 +1,22 @@
 package org.skyreserve.app.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.skyreserve.app.service.kafka.producer.KafkaReactiveProducer;
+import org.skyreserve.app.service.kafka.producer.KafkaProducer;
 import org.skyreserve.app.service.postgres.SolicitarReservaService;
 import org.skyreserve.domain.dto.ReservaDTO;
 import org.skyreserve.domain.entity.ReservaEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
 import java.io.IOException;
+import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reserva")
@@ -18,42 +24,50 @@ import java.io.IOException;
 public class ReservaController {
 
     @Autowired
-    private KafkaReactiveProducer producer;
+    private KafkaProducer producer;
 
     @Autowired
     private SolicitarReservaService service;
 
+    @Autowired
+    private ObjectMapper obj;
+
     @PostMapping("/iniciar")
-    public Mono<Void> start(@RequestBody ReservaDTO reservaDTO) throws IOException {
+    public void start(@RequestBody ReservaDTO reservaDTO) throws IOException {
         log.info("Iniciando a aplicação.");
-        return producer.send(reservaDTO);
+        producer.send(obj.writeValueAsString(reservaDTO));
     }
 
     @GetMapping("/{id}")
-    public Mono<ReservaEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public ResponseEntity<ReservaDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(new ReservaDTO(service.findById(id)));
     }
 
     @GetMapping
-    public Flux<ReservaEntity> findAll() {
-        return service.findAll();
+    public ResponseEntity<List<ReservaDTO>> findAll() {
+        List<ReservaEntity> list = service.findAll();
+        return ResponseEntity.ok().body(
+                list.stream().map(ReservaDTO::new).collect(Collectors.toList()));
     }
+
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ReservaEntity> save(@RequestBody ReservaEntity reservaEntity) {
-        return service.save(reservaEntity);
+    public ResponseEntity<ReservaDTO> save(@Valid @RequestBody ReservaDTO obj) {
+        ReservaEntity newObj = service.save(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newObj.getId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping("/{id}")
-    public Mono<ReservaEntity> update(@PathVariable Long id, @RequestBody ReservaEntity reservaEntity) {
-        return service.update(id, reservaEntity);
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ReservaDTO> update(@PathVariable Long id, @Valid @RequestBody ReservaDTO objDTO) {
+        ReservaEntity newObj = service.update(id, objDTO);
+        return ResponseEntity.ok().body(new ReservaDTO(newObj));
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteById(@PathVariable Long id) {
-        return service.deleteById(id);
+    public void deleteById(@PathVariable Long id) {
+        service.deleteById(id);
     }
 
 

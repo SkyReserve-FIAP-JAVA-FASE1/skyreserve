@@ -1,11 +1,7 @@
 package org.skyreserve.domain.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
-
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
@@ -16,22 +12,19 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("aeronave")
+@Entity
 public class AeronaveEntity implements Serializable {
 
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column("matricula")
     @NotBlank(message = "A matrícula não pode ser vazia.")
     private String matricula = UUID.randomUUID().toString();
 
-    @Column("assentos")
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AssentoEntity> assentos;
 
-    @Column("limiteAssentos")
     private int limiteAssentos = 1;
 
 }

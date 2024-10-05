@@ -1,53 +1,68 @@
 package org.skyreserve.app.service.postgres;
 
 import lombok.extern.slf4j.Slf4j;
-import org.skyreserve.infra.exceptions.ObjectNotFoundException;
+import org.skyreserve.domain.dto.ReservaDTO;
 import org.skyreserve.domain.entity.ReservaEntity;
+import org.skyreserve.domain.entity.VooEntity;
+import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class SolicitarReservaService {
 
-        @Autowired
-        private ReservaRepository repository;
+    @Autowired
+    private ReservaRepository repository;
 
-        public Flux<ReservaEntity> findAll() {
-            return repository.findAll();
-        }
 
-        public Mono<ReservaEntity> findById(Long id) {
-            return repository.findById(id)
-                    .switchIfEmpty(Mono.error(new ObjectNotFoundException("Reserva não encontrada com id: " + id)));
-        }
-
-    public Mono<ReservaEntity> save(ReservaEntity reservaEntity) {
-        return repository.save(reservaEntity)
-                .doOnSuccess(savedEntity -> log.info("Reserva salva"))
-                .doOnError(error -> log.error("Erro ao salvar reserva: ", error));
+    public ReservaEntity findById(Long id) {
+        Optional<ReservaEntity> obj = repository.findById(id);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! ID: " + id));
     }
 
-        public Mono<ReservaEntity> update(Long id, ReservaEntity updatedReservaEntity) {
-            return repository.findById(id)
-                    .flatMap(existingReserva -> {
-                        existingReserva.setPassageiro(updatedReservaEntity.getPassageiro());
-                        existingReserva.setVoo(updatedReservaEntity.getVoo());
-                        existingReserva.setAssento(updatedReservaEntity.getAssento());
-                        existingReserva.setDataDaReserva(updatedReservaEntity.getDataDaReserva());
-                        existingReserva.setBagagem(updatedReservaEntity.isBagagem());
-                        existingReserva.setTipoVoo(updatedReservaEntity.getTipoVoo());
-                        existingReserva.setPagamento(updatedReservaEntity.getPagamento());
-                        existingReserva.setValorReserva(updatedReservaEntity.getValorReserva());
-                        return repository.save(existingReserva);
-                    })
-                    .switchIfEmpty(Mono.error(new ObjectNotFoundException("Reserva não encontrada com id: " + id)));
+    public List<ReservaEntity> findAll() {
+        return repository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        repository.deleteById(id);
+    }
+
+    public ReservaEntity save(ReservaDTO obj) {
+        return repository.save(newReserva(obj));
+    }
+
+    public ReservaEntity update(Long id, @Valid ReservaDTO objDTO) {
+        objDTO.setId(id);
+        ReservaEntity oldObj = findById(id);
+        oldObj = newReserva(objDTO);
+        return repository.save(oldObj);
+    }
+
+    private ReservaEntity newReserva(ReservaDTO obj) {
+        ReservaEntity reservaEntity = new ReservaEntity();
+        if (obj.getId() != null) {
+            reservaEntity.setId(obj.getId());
         }
 
-        public Mono<Void> deleteById(Long id) {
-            return repository.deleteById(id);
-        }
+        reservaEntity.setPassageiro(obj.getPassageiro());
+        reservaEntity.setDataDaReserva(obj.getDataDaReserva());
+        reservaEntity.setBagagem(obj.isBagagem());
+        reservaEntity.setTipoVoo(obj.getTipoVoo());
+        reservaEntity.setValorReserva(obj.getValorReserva());
+
+        // TODO Fazer a busca do Voo, Assento e Pagamento, preencher o objeto para salvar.
+        reservaEntity.setVoo(null);
+        reservaEntity.setAssento(null);
+        reservaEntity.setPagamento(null);
+
+        return reservaEntity;
+    }
 }

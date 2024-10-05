@@ -1,9 +1,12 @@
 package org.skyreserve.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import javax.persistence.Id;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.OneToOne;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,27 +17,23 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("reembolso")
+@Entity
 public class ReembolsoEntity implements Serializable {
 
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column("reserva")
     @OneToOne
     private ReservaEntity reserva;
 
-    @Column("valorRestituicao")
     private BigDecimal valorRestituicao = BigDecimal.ZERO;
-
-    @Column("reembolsoEfetuado")
     private boolean reembolsoEfetuado = false;
 
-    @Column("dataSolicitacao")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataSolicitacao = LocalDateTime.now();
 
-    @Column("dataReembolso")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dataReembolso;
 
 }

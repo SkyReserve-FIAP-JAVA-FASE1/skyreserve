@@ -1,10 +1,12 @@
 package org.skyreserve.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import javax.persistence.Id;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -16,33 +18,28 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table("passageiro")
+@Entity
 public class PassageiroEntity implements Serializable {
 
     @Id
-    @Column("id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column("nome")
     @NotBlank(message = "O nome não pode estar vazio.")
     private String nome;
 
-    @Column("cpf")
     @Pattern(regexp = "\\d{11}", message = "CPF deve ter 11 dígitos.")
     private String cpf;
 
-    @Column("email")
     @Email
     private String email;
 
-    @Column("numeroPassaporte")
     @NotBlank(message = "O número do passaporte não pode estar vazio.")
     private String numeroPassaporte;
 
-    @Column("dataNascimento")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
 
-    @Column("celular")
     private String celular;
 
 }
