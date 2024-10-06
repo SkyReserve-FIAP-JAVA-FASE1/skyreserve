@@ -2,6 +2,7 @@
 package org.skyreserve.domain.dto;
 
 import lombok.*;
+import org.skyreserve.domain.entity.VooEntity;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,15 @@ public class VooDTO {
     private LocalDateTime dataHoraPartida;
     private LocalDateTime dataHoraChegada;
     private AeronaveDTO aeronave;
+
+    public VooDTO(VooEntity voo) {
+        this.id = voo.getId();
+        this.origem = voo.getOrigem();
+        this.destino = voo.getDestino();
+        this.dataHoraPartida = voo.getDataHoraPartida();
+        this.dataHoraChegada = voo.getDataHoraChegada();
+        this.aeronave = new AeronaveDTO(voo.getAeronave());
+    }
 
     @Override
     public String toString() {

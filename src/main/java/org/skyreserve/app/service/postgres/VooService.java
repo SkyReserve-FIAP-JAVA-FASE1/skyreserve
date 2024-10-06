@@ -3,15 +3,17 @@ package org.skyreserve.app.service.postgres;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.VooDTO;
 import org.skyreserve.domain.entity.AeronaveEntity;
+import org.skyreserve.domain.entity.AssentoEntity;
 import org.skyreserve.domain.entity.VooEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.VooRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -46,17 +48,33 @@ public class VooService {
     }
 
     private VooEntity newVoo(VooDTO obj) {
-        VooEntity VooEntity = new VooEntity();
+        VooEntity vooEntity = new VooEntity();
         if (obj.getId() != null) {
-            VooEntity.setId(obj.getId());
+            vooEntity.setId(obj.getId());
         }
 
-        VooEntity.setId(obj.getId());
-        VooEntity.setOrigem(obj.getOrigem());
-        VooEntity.setDestino(obj.getDestino());
-        VooEntity.setDataHoraChegada(obj.getDataHoraChegada());
-        VooEntity.setDataHoraPartida(obj.getDataHoraPartida());
+        vooEntity.setId(obj.getId());
+        vooEntity.setOrigem(obj.getOrigem());
+        vooEntity.setDestino(obj.getDestino());
+        vooEntity.setDataHoraChegada(obj.getDataHoraChegada());
+        vooEntity.setDataHoraPartida(obj.getDataHoraPartida());
 
-        return VooEntity;
+        if(Objects.nonNull(obj.getAeronave())){
+            vooEntity.setAeronave(AeronaveEntity.builder()
+                    .id(obj.getAeronave().getId())
+                    .limiteAssentos(obj.getAeronave().getLimiteAssentos())
+                    .matricula(obj.getAeronave().getMatricula())
+                    .assentos(obj.getAeronave().getAssentos()
+                            .stream()
+                            .map(assento -> AssentoEntity.builder()
+                                    .id(assento.getId())
+                                    .descricao(assento.getDescricao())
+                                    .reservado(assento.isReservado())
+                                    .build())
+                            .collect(Collectors.toList()))
+                    .build());
+        }
+
+        return vooEntity;
     }
 }

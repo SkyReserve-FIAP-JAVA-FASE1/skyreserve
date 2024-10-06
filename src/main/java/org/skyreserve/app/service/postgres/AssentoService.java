@@ -29,6 +29,11 @@ public class AssentoService {
         return repository.findAll();
     }
 
+    public List<AssentoEntity> findAllById(List<Long> ids) {
+        return repository.findAllById(ids);
+    }
+
+
     public void deleteById(Long id) {
         repository.deleteById(id);
     }

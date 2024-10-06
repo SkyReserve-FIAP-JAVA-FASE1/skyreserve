@@ -2,7 +2,9 @@ package org.skyreserve.app.service.postgres;
 
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.AeronaveDTO;
+import org.skyreserve.domain.dto.AssentoDTO;
 import org.skyreserve.domain.entity.AeronaveEntity;
+import org.skyreserve.domain.entity.AssentoEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.AeronaveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -18,6 +21,9 @@ public class AeronaveService {
 
     @Autowired
     private AeronaveRepository repository;
+
+    @Autowired
+    private AssentoService assentoService;
 
 
     public AeronaveEntity findById(Long id) {
@@ -53,6 +59,13 @@ public class AeronaveService {
         aeronaveEntity.setId(obj.getId());
         aeronaveEntity.setMatricula(obj.getMatricula());
         aeronaveEntity.setLimiteAssentos(obj.getLimiteAssentos());
+        aeronaveEntity.setAssentos(obj.getAssentos()
+                .stream()
+                .map(assentoDTO -> AssentoEntity.builder()
+                        .id(assentoDTO.getId())
+                        .descricao(assentoDTO.getDescricao())
+                        .reservado(assentoDTO.isReservado())
+                        .build()).collect(Collectors.toList()));
 
         return aeronaveEntity;
     }

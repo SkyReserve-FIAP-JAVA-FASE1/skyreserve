@@ -29,12 +29,17 @@ public class PagamentoService {
         return repository.findAll();
     }
 
+    public PagamentoEntity findByIdWithReservas(Long id) {
+        return repository.findByIdWithReservas(id);
+    }
+
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
 
     public PagamentoEntity save(PagamentoDTO obj) {
-        return repository.save(newPagamento(obj));
+        PagamentoEntity item = newPagamento(obj);
+        return repository.save(item);
     }
 
     public PagamentoEntity update(Long id, @Valid PagamentoDTO objDTO) {
@@ -56,6 +61,7 @@ public class PagamentoService {
         pagamentoEntity.setBagagem(obj.isBagagem());
         pagamentoEntity.setTipoVoo(obj.getTipoVoo());
         pagamentoEntity.setValorTotal(obj.getValorTotal());
+        pagamentoEntity.setReservas(obj.getReservas() != null ? obj.getReservas() : null);
 
         return pagamentoEntity;
     }

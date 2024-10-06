@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.skyreserve.domain.entity.PassageiroEntity;
 
 import java.time.LocalDate;
 
@@ -29,14 +30,14 @@ public class PassageiroDTO {
 
     private String celular;
 
-    public PassageiroDTO(PassageiroDTO passageiroDTO) {
-        id = passageiroDTO.getId();
-        nome = passageiroDTO.getNome();
-        cpf = passageiroDTO.getCpf();
-        email = passageiroDTO.getEmail();
-        numeroPassaporte = passageiroDTO.getNumeroPassaporte();
-        dataNascimento = passageiroDTO.getDataNascimento();
-        celular = passageiroDTO.getCelular();
+    public PassageiroDTO(PassageiroEntity passageiroEntity) {
+        this.id = passageiroEntity.getId();
+        this.nome = passageiroEntity.getNome();
+        this.cpf = passageiroEntity.getCpf();
+        this.email = passageiroEntity.getEmail();
+        this.numeroPassaporte = passageiroEntity.getNumeroPassaporte();
+        this.dataNascimento = passageiroEntity.getDataNascimento();
+        this.celular = passageiroEntity.getCelular();
     }
 
     @Override

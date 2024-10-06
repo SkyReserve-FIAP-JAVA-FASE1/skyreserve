@@ -3,6 +3,7 @@ package org.skyreserve.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.skyreserve.domain.dto.VooDTO;
 
 import javax.persistence.*;
 
@@ -37,5 +38,16 @@ public class VooEntity implements Serializable {
 
     @ManyToOne
     private AeronaveEntity aeronave;
+
+    public VooEntity(VooDTO dto) {
+        if(dto != null){
+            this.id = dto.getId();
+            this.origem = dto.getOrigem();
+            this.destino = dto.getDestino();
+            this.dataHoraPartida = dto.getDataHoraPartida();
+            this.dataHoraChegada = dto.getDataHoraChegada();
+            this.aeronave = dto.getAeronave() != null && dto.getAeronave().getId() != null ? new AeronaveEntity(dto.getAeronave()) : null;
+        }
+    }
 
 }

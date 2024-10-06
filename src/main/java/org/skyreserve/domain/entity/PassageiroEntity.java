@@ -2,6 +2,7 @@ package org.skyreserve.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.skyreserve.domain.dto.PassageiroDTO;
 
 import javax.persistence.*;
 
@@ -40,5 +41,17 @@ public class PassageiroEntity implements Serializable {
     private LocalDate dataNascimento;
 
     private String celular;
+
+    public PassageiroEntity(PassageiroDTO dto) {
+        if(dto != null){
+            this.id = dto.getId();
+            this.nome = dto.getNome();
+            this.cpf = dto.getCpf();
+            this.email = dto.getEmail();
+            this.numeroPassaporte = dto.getNumeroPassaporte();
+            this.dataNascimento = dto.getDataNascimento();
+            this.celular = dto.getCelular();
+        }
+    }
 
 }

@@ -2,7 +2,7 @@ package org.skyreserve.app.service.postgres;
 
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.ReservaDTO;
-import org.skyreserve.domain.entity.ReservaEntity;
+import org.skyreserve.domain.entity.*;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.ReservaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,10 @@ public class SolicitarReservaService {
     }
 
     public ReservaEntity save(ReservaDTO obj) {
-        return repository.save(newReserva(obj));
+        ReservaEntity item = (newReserva(obj));
+        if(obj.getPagamento() == null || obj.getPagamento().getId() == null)
+            item.setPagamento(null);
+        return repository.save(item);
     }
 
     public ReservaEntity update(Long id, @Valid ReservaDTO objDTO) {
@@ -50,16 +53,15 @@ public class SolicitarReservaService {
             reservaEntity.setId(obj.getId());
         }
 
-        reservaEntity.setPassageiro(obj.getPassageiro());
+        reservaEntity.setPassageiro(new PassageiroEntity(obj.getPassageiroDTO()));
         reservaEntity.setDataDaReserva(obj.getDataDaReserva());
         reservaEntity.setBagagem(obj.isBagagem());
         reservaEntity.setTipoVoo(obj.getTipoVoo());
         reservaEntity.setValorReserva(obj.getValorReserva());
 
-        // TODO Fazer a busca do Voo, Assento e Pagamento, preencher o objeto para salvar.
-        reservaEntity.setVoo(null);
-        reservaEntity.setAssento(null);
-        reservaEntity.setPagamento(null);
+        reservaEntity.setVoo(new VooEntity(obj.getVooDTO()));
+        reservaEntity.setAssento(new AssentoEntity(obj.getAssentoDTO()));
+        reservaEntity.setPagamento(new PagamentoEntity(obj.getPagamento()));
 
         return reservaEntity;
     }

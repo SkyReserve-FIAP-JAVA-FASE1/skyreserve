@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 123,\r\n    \"passageiro\": {\r\n        \"id\": 1,\r\n        \"nome\": \"João Silva\",\r\n        \"cpf\": \"12345678900\",\r\n        \"email\": \"joao.silva@example.com\",\r\n        \"numeroPassaporte\": \"BR123456\",\r\n        \"dataNascimento\": \"10/04/2000\",\r\n        \"celular\": \"+55 11 98765-4321\"\r\n    },\r\n    \"voo\": 1,\r\n    \"assento\": 1,\r\n    \"dataDaReserva\": \"10/04/2024 14:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"pagamento\": 654321,\r\n    \"valorReserva\": 899.99\r\n}",
+							"raw": "{\r\n    \"passageiroDTO\": {\r\n        \"id\": 7\r\n    },\r\n    \"vooDTO\": {\r\n        \"id\": 7,\r\n        \"aeronaveDTO\": {\r\n            \"id\": 7\r\n        }\r\n    },\r\n    \"assentoDTO\": {\r\n        \"id\": 13\r\n    },\r\n    \"dataDaReserva\": \"10/04/2024 14:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 298.95\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -88,7 +88,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/reserva/1",
+							"raw": "http://localhost:8080/reserva/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -96,7 +96,7 @@
 							"port": "8080",
 							"path": [
 								"reserva",
-								"1"
+								"6"
 							]
 						}
 					},
