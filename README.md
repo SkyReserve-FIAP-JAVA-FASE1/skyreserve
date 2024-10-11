@@ -8,6 +8,7 @@
 - As variáveis de ambiente estão na pasta env.
 - Ao iniciar a aplicação, não se esqueça de verificar se existe o tópico (teste) no KafkaDrop: http://localhost:9000
 - Obs: a variável de ambiente Local (localizada no .env) cria alguns registros iniciais como: assento, aeronave, passageiro, etc. Para facilitar na hora de gerar uma reserva por exemplo.
+- A pasta initial_files é apenas um backup para a criação das tabelas do banco de dados.
 
 ## Pré-requisitos
 
