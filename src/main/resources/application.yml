@@ -21,3 +21,4 @@ spring:
       max-size: 20
 topics:
   skytopic: ${SKYTOPIC:skytopic}
+local: ${GERAR_DADOS_INICIAIS:true} # Se GERAR_DADOS_INICIAIS = true, será criado alguns dados para facilitar nas requisições.

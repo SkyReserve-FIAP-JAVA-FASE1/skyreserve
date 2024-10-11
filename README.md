@@ -7,6 +7,7 @@
 - Na pasta Collections estão os dados para fazer as requisições no postman (collection/SkyReserve.postman_collection.json). 
 - As variáveis de ambiente estão na pasta env.
 - Ao iniciar a aplicação, não se esqueça de verificar se existe o tópico (teste) no KafkaDrop: http://localhost:9000
+- Obs: a variável de ambiente Local (localizada no .env) cria alguns registros iniciais como: assento, aeronave, passageiro, etc. Para facilitar na hora de gerar uma reserva por exemplo.
 
 ## Pré-requisitos
 
