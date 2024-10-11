@@ -62,6 +62,17 @@ public class PostgreSQLInitDatabase {
                 .fetch().rowsUpdated().block();
 
 
+        // TABLE PAGAMENTO
+        databaseClient.sql("CREATE TABLE IF NOT EXISTS pagamento (\n" +
+                        "    id SERIAL PRIMARY KEY,\n" +
+                        "    data_pagamento TIMESTAMP NOT NULL,\n" +
+                        "    valor_total NUMERIC(15, 2) NOT NULL,\n" +
+                        "    status_pagamento VARCHAR(50) NOT NULL\n" +
+                        ");")
+                .fetch().rowsUpdated().block();
+
+
+
 
     }
 }
