@@ -73,7 +73,7 @@ public class PostgreSQLInitDatabase {
 
 
         // TABLE RESERVA
-        databaseClient.sql("CREATE TABLE reserva (\n" +
+        databaseClient.sql("CREATE TABLE IF NOT EXISTS reserva (\n" +
                         "    id BIGSERIAL PRIMARY KEY,\n" +
                         "    passageiro_id BIGINT NOT NULL,\n" +
                         "    voo_id BIGINT NOT NULL,\n" +

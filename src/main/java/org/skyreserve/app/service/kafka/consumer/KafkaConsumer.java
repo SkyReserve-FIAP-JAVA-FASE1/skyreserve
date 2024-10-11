@@ -3,9 +3,9 @@ package org.skyreserve.app.service.kafka.consumer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.skyreserve.app.service.postgres.AssentoService;
-import org.skyreserve.domain.dto.AssentoDTO;
-import org.skyreserve.infra.mapper.AssentoMapper;
+import org.skyreserve.app.service.postgres.ReservaService;
+import org.skyreserve.domain.dto.ReservaDTO;
+import org.skyreserve.infra.mapper.ReservaMapper;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,9 +21,9 @@ public class KafkaConsumer {
     private final Flux<?> kafkaFlux;
 
     public KafkaConsumer(ReceiverOptions<String, String> receiverOptions,
-                                 ObjectMapper objectMapper,
-                                 AssentoService service,
-                                 AssentoMapper assentoMapper) {
+                         ObjectMapper objectMapper,
+                         ReservaService service,
+                         ReservaMapper reservaMapper) {
 
         KafkaReceiver<String, String> kafkaReceiver = KafkaReceiver.create(receiverOptions);
 
@@ -33,12 +33,13 @@ public class KafkaConsumer {
                     try {
                         log.info("Tópico consumido com sucesso no Kafka...");
 
-                        AssentoDTO assentoDTO = objectMapper.readValue(message, new TypeReference<>() {});
+                        ReservaDTO reservaDTO = objectMapper.readValue(message, new TypeReference<>() {
+                        });
                         log.info("Mapper realizado com sucesso");
 
-                        return service.save(assentoDTO)
+                        return service.save(reservaDTO)
                                 .doOnSuccess(entity -> {
-                                    log.info("Assento salvo com sucesso: {}", assentoMapper.toDTO(entity).toString());
+                                    log.info("Reserva salva com sucesso: {}", reservaMapper.toDTO(entity).toString());
                                     record.receiverOffset().acknowledge();
                                 })
                                 .doOnError(error -> log.error("Erro ao salvar no banco de dados: ", error));
