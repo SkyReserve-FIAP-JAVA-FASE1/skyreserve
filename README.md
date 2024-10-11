@@ -1,6 +1,6 @@
 # Projeto SKYRESERVE
 
-- Este projeto demonstra como configurar e testar uma aplicação Java com o PostgreSQL Local e Kafka utilizando Docker.
+- Este projeto demonstra como configurar e testar uma aplicação reativa em Java com o PostgreSQL Local e Kafka utilizando Docker.
 - Para iniciar o Kafka utilize o docker-compose irá subir o Kafka, KafkaDrop para ver os tópicos, ZooKeeper, e o PostgreSQL. Todos dentro do container skyreserve.
 - O Kafka Drop utilizamos para visualizar os tópicos pelo navegador. (http://localhost:9000/)
 - URL para utilizar no postman e startar a aplicação (POST e o BODY): http://localhost:8080/
