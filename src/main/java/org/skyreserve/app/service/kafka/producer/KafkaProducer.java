@@ -1,23 +1,43 @@
 package org.skyreserve.app.service.kafka.producer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+import reactor.kafka.sender.KafkaSender;
+import reactor.kafka.sender.SenderRecord;
+
+import java.util.UUID;
 
 @Service
+@Slf4j
 public class KafkaProducer {
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaSender<String, String> sender;
+    private final String topic;
 
-    @Value("${spring.kafka.topic.name}")
-    private String topicName;
-
-    public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
+    @Autowired
+    public KafkaProducer(KafkaSender<String, String> sender,
+                         @Value("${spring.kafka.topic}") String topic) {
+        this.sender = sender;
+        this.topic = topic;
     }
 
-    public void send(String mensagem) {
-        kafkaTemplate.send(topicName, mensagem);
-        System.out.println("Mensagem enviada: " + mensagem);
+    public Mono<Void> send(String payload) {
+        return Mono.fromCallable(() -> {
+                    return SenderRecord.create(topic, null, null, UUID.randomUUID().toString(), payload, 1);
+                })
+                .flatMap(record ->
+                        sender.send(Mono.just(record))
+                                .doOnError(e -> log.error("Falha no envio: {}", e.getMessage()))
+                                .doOnNext(r -> log.info("Mensagem {} enviada com sucesso", r.correlationMetadata()))
+                                .then()
+                )
+                .onErrorResume(JsonProcessingException.class, e -> {
+                    log.error("Erro ao processar JSON: {}", e.getMessage());
+                    return Mono.empty();
+                });
     }
 }

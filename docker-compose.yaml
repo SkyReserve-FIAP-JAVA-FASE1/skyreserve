@@ -46,17 +46,21 @@ services:
       KAFKA_BROKERCONNECT: "kafka1:19092"
     depends_on:
       - kafka1
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserverdb
+
+  postgres:
+    image: postgres:15
+    container_name: skyreservedb
+    networks:
+      - broker-kafka
     environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "SkyReserve2024"
-      MSSQL_PID: "Express"
-      MSSQL_TCP_PORT: "1433"
-      MSSQL_AGENT_ENABLED: "true"
+      POSTGRES_DB: skyreserve
+      POSTGRES_USER: skyreserveusr
+      POSTGRES_PASSWORD: Sky1024@reserve
     ports:
-      - "1433:1433"
+      - "5432:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+
 networks:
   broker-kafka:
     driver: bridge

@@ -2,8 +2,9 @@ package org.skyreserve.domain.entity;
 
 import lombok.*;
 import org.skyreserve.domain.dto.AssentoDTO;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 @Getter
@@ -11,12 +12,10 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "assento")
+@Table("assento")
 public class AssentoEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String descricao;
     private boolean reservado = false;

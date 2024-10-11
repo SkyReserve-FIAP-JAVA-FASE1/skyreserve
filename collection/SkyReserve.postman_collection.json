@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "Reservas",
+			"name": "Assento",
 			"item": [
 				{
 					"name": "Iniciar",
@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passageiroDTO\": {\r\n        \"id\": 7\r\n    },\r\n    \"vooDTO\": {\r\n        \"id\": 7,\r\n        \"aeronaveDTO\": {\r\n            \"id\": 7\r\n        }\r\n    },\r\n    \"assentoDTO\": {\r\n        \"id\": 13\r\n    },\r\n    \"dataDaReserva\": \"10/04/2024 14:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 298.95\r\n}",
+							"raw": "{\r\n    \"nome\": \"A1\",\r\n    \"descricao\": \"Fileira A - Assento 1\",\r\n    \"reservado\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,15 +24,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/reserva/iniciar",
+							"raw": "http://localhost:8080/assento/start",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"reserva",
-								"iniciar"
+								"assento",
+								"start"
 							]
 						}
 					},
@@ -56,14 +56,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/reserva/",
+							"raw": "http://localhost:8080/assento/",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"reserva",
+								"assento",
 								""
 							]
 						}
@@ -88,15 +88,73 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/reserva/6",
+							"raw": "http://localhost:8080/assento/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"reserva",
-								"6"
+								"assento",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"A1\",\r\n    \"descricao\": \"Fileira A - Assento 1\",\r\n    \"reservado\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/assento/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assento",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/assento/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assento",
+								"1"
 							]
 						}
 					},

@@ -2,26 +2,20 @@ server:
   port: ${PORT:8080}
 spring:
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
+    topic: ${TOPIC:skytopic}
     consumer:
       group-id: ${GROUP_CONSUMER:grupo-sky}
-      auto-offset-reset: earliest
+      auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      enable-auto-commit: true
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-    topic:
-      name: ${TOPIC:teste}
-  datasource:
-    url: ${URL_SQL_SERVER:jdbc:sqlserver://localhost:1433;databaseName=skyreserve;encrypt=false}
-    username: ${USER_SQL_SERVER:sa}
-    password: ${PASS_SQL_SERVER:SkyReserve2024}
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-  jpa:
-    hibernate:
-      dialect: org.hibernate.dialect.SQLServerDialect
-      show_sql: true
-      format_sql: true
-      ddl-auto: update
+  r2dbc:
+    url: ${POSTGRES_URL:r2dbc:postgresql://localhost:5432/skyreserve}
+    username: ${POSTGRES_USER:skyreserveusr}
+    password: ${POSTGRES_PASS:Sky1024@reserve}
+    pool:
+      enabled: true
+      max-size: 20
