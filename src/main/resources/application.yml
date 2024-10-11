@@ -19,3 +19,5 @@ spring:
     pool:
       enabled: true
       max-size: 20
+topics:
+  skytopic: ${SKYTOPIC:skytopic}

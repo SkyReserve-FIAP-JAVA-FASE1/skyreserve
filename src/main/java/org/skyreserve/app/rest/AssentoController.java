@@ -28,13 +28,6 @@ public class AssentoController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostMapping("/start")
-    public Mono<Void> start(@RequestBody AssentoDTO assentoDTO) throws IOException {
-        log.info("Iniciando a aplicação.");
-        String payload = objectMapper.writeValueAsString(assentoDTO);
-        return producer.send(payload);
-    }
-
     @GetMapping("/{id}")
     public Mono<AssentoEntity> findById(@PathVariable Long id) {
         return service.findById(id);

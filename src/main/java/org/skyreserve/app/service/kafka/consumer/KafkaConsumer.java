@@ -24,6 +24,7 @@ public class KafkaConsumer {
                                  ObjectMapper objectMapper,
                                  AssentoService service,
                                  AssentoMapper assentoMapper) {
+
         KafkaReceiver<String, String> kafkaReceiver = KafkaReceiver.create(receiverOptions);
 
         kafkaFlux = kafkaReceiver.receive()
