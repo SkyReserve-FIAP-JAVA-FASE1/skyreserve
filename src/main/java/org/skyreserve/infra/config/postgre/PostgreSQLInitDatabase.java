@@ -48,6 +48,20 @@ public class PostgreSQLInitDatabase {
                 .fetch().rowsUpdated().block();
 
 
+        // TABLE VOO
+        databaseClient.sql("CREATE TABLE IF NOT EXISTS voo (\n" +
+                        "    id SERIAL PRIMARY KEY,\n" +
+                        "    origem VARCHAR(255) NOT NULL,\n" +
+                        "    destino VARCHAR(255) NOT NULL,\n" +
+                        "    data_hora_partida TIMESTAMP NOT NULL,\n" +
+                        "    data_hora_chegada TIMESTAMP NOT NULL,\n" +
+                        "    aeronave_id INT NOT NULL,\n" +
+                        "    CONSTRAINT fk_aeronave\n" +
+                        "        FOREIGN KEY (aeronave_id) REFERENCES aeronave (id)\n" +
+                        ");")
+                .fetch().rowsUpdated().block();
+
+
 
     }
 }
