@@ -11,6 +11,7 @@ public class AssentoMapper {
                 .id(entity.getId())
                 .descricao(entity.getDescricao())
                 .reservado(entity.isReservado())
+                .aeronaveId(entity.getAeronaveId())
                 .build();
     }
 
@@ -19,6 +20,7 @@ public class AssentoMapper {
                 .id(dto.getId())
                 .descricao(dto.getDescricao())
                 .reservado(dto.isReservado())
+                .aeronaveId(dto.getAeronaveId())
                 .build();
     }
 }

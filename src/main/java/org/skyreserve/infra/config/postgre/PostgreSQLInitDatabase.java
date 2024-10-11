@@ -15,12 +15,23 @@ public class PostgreSQLInitDatabase {
     @PostConstruct
     public void init() {
 
+        // TABLE AERONAVE
+        databaseClient.sql("CREATE TABLE IF NOT exists aeronave (\n" +
+                        "    id SERIAL PRIMARY KEY,\n" +
+                        "    matricula VARCHAR(255) NOT NULL UNIQUE,\n" +
+                        "    limite_assentos INT NOT NULL DEFAULT 1\n" +
+                        ");")
+                .fetch().rowsUpdated().block();
+
+
         // TABLE ASSENTO
         databaseClient.sql("CREATE TABLE IF NOT exists assento (\n" +
                         "    id BIGSERIAL PRIMARY KEY,\n" +
                         "    descricao VARCHAR(255) NOT NULL,\n" +
-                        "    reservado BOOLEAN DEFAULT FALSE\n" +
-                        ");")
+                        "    reservado BOOLEAN DEFAULT false,\n" +
+                        "  \taeronave_id BIGINT NOT NULL,\n" +
+                        "    FOREIGN KEY (aeronave_id) REFERENCES aeronave(id) ON DELETE CASCADE\n" +
+                        ")")
                 .fetch().rowsUpdated().block();
 
 

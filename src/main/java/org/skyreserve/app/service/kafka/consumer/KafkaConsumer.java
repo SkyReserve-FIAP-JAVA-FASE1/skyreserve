@@ -44,6 +44,7 @@ public class KafkaConsumer {
 
                     } catch (Exception e) {
                         log.error("Erro ao processar a mensagem: ", e);
+                        record.receiverOffset().acknowledge();
                         return Mono.empty();
                     }
                 });

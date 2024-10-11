@@ -33,7 +33,7 @@ public class PassageiroService {
     public Mono<PassageiroEntity> save(PassageiroDTO obj) {
         return repository.save(new PassageiroEntity(obj))
                 .doOnSuccess(savedEntity -> log.info("Passageiro salvo"))
-                .doOnError(error -> log.error("Erro ao salvar inscrito: ", error));
+                .doOnError(error -> log.error("Erro ao passageiro: ", error));
     }
 
     public Mono<PassageiroEntity> update(Long id, PassageiroDTO objDTO) {

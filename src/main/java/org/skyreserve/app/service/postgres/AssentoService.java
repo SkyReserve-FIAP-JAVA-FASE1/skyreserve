@@ -33,7 +33,7 @@ public class AssentoService {
     public Mono<AssentoEntity> save(AssentoDTO obj) {
         return repository.save(new AssentoEntity(obj))
                 .doOnSuccess(savedEntity -> log.info("Assento salvo"))
-                .doOnError(error -> log.error("Erro ao salvar inscrito: ", error));
+                .doOnError(error -> log.error("Erro ao salvar assento: ", error));
     }
 
     public Mono<AssentoEntity> update(Long id, AssentoDTO objDTO) {
@@ -42,6 +42,7 @@ public class AssentoService {
                     entity.setId(id);
                     entity.setDescricao(objDTO.getDescricao());
                     entity.setReservado(objDTO.isReservado());
+                    entity.setAeronaveId(objDTO.getAeronaveId());
                     return repository.save(entity);
                 })
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
