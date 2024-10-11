@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.postgres.ReservaService;
 import org.skyreserve.domain.dto.ReservaDTO;
+import org.skyreserve.infra.config.kafka.CreateReceiverOptions;
 import org.skyreserve.infra.mapper.ReservaMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -16,15 +18,19 @@ import javax.annotation.PostConstruct;
 
 @Service
 @Slf4j
-public class KafkaConsumer {
+public class KafkaConsumerSkyTopic {
 
     private final Flux<?> kafkaFlux;
 
-    public KafkaConsumer(ReceiverOptions<String, String> receiverOptions,
-                         ObjectMapper objectMapper,
-                         ReservaService service,
-                         ReservaMapper reservaMapper) {
+    public KafkaConsumerSkyTopic(ReceiverOptions<String, String> receiverOptions,
+                                 @Value("${spring.kafka.bootstrap-servers}") String url,
+                                 @Value("${topics.skytopic}") String topic,
+                                 @Value("${spring.kafka.consumer.group-id}") String groupId,
+                                 ObjectMapper objectMapper,
+                                 ReservaService service,
+                                 ReservaMapper reservaMapper, CreateReceiverOptions createReceiverOptions) {
 
+        receiverOptions = createReceiverOptions.create(topic, groupId, url);
         KafkaReceiver<String, String> kafkaReceiver = KafkaReceiver.create(receiverOptions);
 
         kafkaFlux = kafkaReceiver.receive()
