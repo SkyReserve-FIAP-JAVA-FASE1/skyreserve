@@ -72,6 +72,26 @@ public class PostgreSQLInitDatabase {
                 .fetch().rowsUpdated().block();
 
 
+        // TABLE RESERVA
+        databaseClient.sql("CREATE TABLE reserva (\n" +
+                        "    id BIGSERIAL PRIMARY KEY,\n" +
+                        "    passageiro_id BIGINT NOT NULL,\n" +
+                        "    voo_id BIGINT NOT NULL,\n" +
+                        "    assento_id BIGINT NOT NULL,\n" +
+                        "    pagamento_id BIGINT NOT NULL,\n" +
+                        "    data_da_reserva TIMESTAMP NOT NULL,\n" +
+                        "    bagagem BOOLEAN DEFAULT FALSE,\n" +
+                        "    tipo_voo VARCHAR(50) NOT NULL,\n" +
+                        "    valor_reserva DECIMAL(10, 2) NOT NULL,\n" +
+                        "    \n" +
+                        "    CONSTRAINT fk_passageiro FOREIGN KEY (passageiro_id) REFERENCES passageiro(id),\n" +
+                        "    CONSTRAINT fk_voo FOREIGN KEY (voo_id) REFERENCES voo(id),\n" +
+                        "    CONSTRAINT fk_assento FOREIGN KEY (assento_id) REFERENCES assento(id),\n" +
+                        "    CONSTRAINT fk_pagamento FOREIGN KEY (pagamento_id) REFERENCES pagamento(id)\n" +
+                        ");")
+                .fetch().rowsUpdated().block();
+
+
 
 
     }
