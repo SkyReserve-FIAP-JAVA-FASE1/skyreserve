@@ -38,11 +38,11 @@ public class AssentoService {
 
     public Mono<AssentoEntity> update(Long id, AssentoDTO objDTO) {
         return repository.findById(id)
-                .flatMap(existingInscrito -> {
-                    existingInscrito.setId(id);
-                    existingInscrito.setDescricao(objDTO.getDescricao());
-                    existingInscrito.setReservado(objDTO.isReservado());
-                    return repository.save(existingInscrito);
+                .flatMap(entity -> {
+                    entity.setId(id);
+                    entity.setDescricao(objDTO.getDescricao());
+                    entity.setReservado(objDTO.isReservado());
+                    return repository.save(entity);
                 })
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
     }
