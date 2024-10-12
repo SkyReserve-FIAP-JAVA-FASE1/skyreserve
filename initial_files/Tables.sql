@@ -9,6 +9,7 @@ CREATE TABLE IF NOT exists aeronave (
 -- ASSENTO
 CREATE TABLE IF NOT exists assento (
     id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
     descricao VARCHAR(255) NOT NULL,
     reservado BOOLEAN DEFAULT false,
   	aeronave_id BIGINT NOT NULL,
