@@ -10,6 +10,7 @@ public class AssentoMapper {
         return AssentoDTO.builder()
                 .id(entity.getId())
                 .descricao(entity.getDescricao())
+                .nome(entity.getNome())
                 .reservado(entity.isReservado())
                 .aeronaveId(entity.getAeronaveId())
                 .build();
@@ -18,6 +19,7 @@ public class AssentoMapper {
     public AssentoEntity toEntity(AssentoDTO dto) {
         return AssentoEntity.builder()
                 .id(dto.getId())
+                .nome(dto.getNome())
                 .descricao(dto.getDescricao())
                 .reservado(dto.isReservado())
                 .aeronaveId(dto.getAeronaveId())

@@ -40,6 +40,7 @@ public class AssentoService {
         return repository.findById(id)
                 .flatMap(entity -> {
                     entity.setId(id);
+                    entity.setNome(objDTO.getNome());
                     entity.setDescricao(objDTO.getDescricao());
                     entity.setReservado(objDTO.isReservado());
                     entity.setAeronaveId(objDTO.getAeronaveId());

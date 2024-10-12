@@ -48,8 +48,23 @@ public class DBServiceLocal {
 
                 // INSERÇÃO DO ASSENTO
                 databaseClient.sql("INSERT INTO public.assento\n" +
-                                "(id, descricao, reservado, aeronave_id)\n" +
-                                "VALUES(nextval('assento_id_seq'::regclass), 'A1', false, 1);")
+                                "(id, descricao, nome, reservado, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 1 - Fileira 1' ,'A1F1' , false, 1);")
+                        .fetch().rowsUpdated().block();
+
+                databaseClient.sql("INSERT INTO public.assento\n" +
+                                "(id, descricao, nome, reservado, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 2 - Fileira 1' ,'A2F1' , false, 1);")
+                        .fetch().rowsUpdated().block();
+
+                databaseClient.sql("INSERT INTO public.assento\n" +
+                                "(id, descricao, nome, reservado, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 3 - Fileira 1' ,'A3F1' , false, 1);")
+                        .fetch().rowsUpdated().block();
+
+                databaseClient.sql("INSERT INTO public.assento\n" +
+                                "(id, descricao, nome, reservado, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 4 - Fileira 1' ,'A4F1' , false, 1);")
                         .fetch().rowsUpdated().block();
 
 

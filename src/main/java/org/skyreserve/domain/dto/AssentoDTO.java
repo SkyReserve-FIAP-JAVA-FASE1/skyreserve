@@ -13,11 +13,13 @@ public class AssentoDTO{
 
     private Long id;
     private String descricao;
+    private String nome;
     private boolean reservado;
     private Long aeronaveId;
 
     public AssentoDTO(AssentoEntity assentoEntity) {
         id = assentoEntity.getId();
+        nome = assentoEntity.getNome();
         descricao = assentoEntity.getDescricao();
         reservado = assentoEntity.isReservado();
         aeronaveId = assentoEntity.getAeronaveId();
@@ -27,6 +29,7 @@ public class AssentoDTO{
     public String toString() {
         return "AssentoDTO{" +
                 "id=" + id +
+                ", nome='" + nome + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", reservado=" + reservado +
                 ", aeronave=" + aeronaveId +

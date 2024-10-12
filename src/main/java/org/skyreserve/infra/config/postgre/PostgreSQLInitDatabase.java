@@ -27,6 +27,7 @@ public class PostgreSQLInitDatabase {
         // TABLE ASSENTO
         databaseClient.sql("CREATE TABLE IF NOT exists assento (\n" +
                         "    id BIGSERIAL PRIMARY KEY,\n" +
+                        "    nome VARCHAR(255) NOT NULL,\n" +
                         "    descricao VARCHAR(255) NOT NULL,\n" +
                         "    reservado BOOLEAN DEFAULT false,\n" +
                         "  \taeronave_id BIGINT NOT NULL,\n" +
