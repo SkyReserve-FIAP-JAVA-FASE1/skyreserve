@@ -23,7 +23,7 @@ public class VooEntity implements Serializable {
     private String destino;
     private LocalDateTime dataHoraPartida;
     private LocalDateTime dataHoraChegada;
-    private int aeronaveId;
+    private Long aeronaveId;
 
     public VooEntity(VooDTO dto) {
         if (dto != null) {

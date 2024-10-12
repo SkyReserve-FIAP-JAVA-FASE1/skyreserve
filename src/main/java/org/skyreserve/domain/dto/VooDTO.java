@@ -19,7 +19,7 @@ public class VooDTO {
     private String destino;
     private LocalDateTime dataHoraPartida;
     private LocalDateTime dataHoraChegada;
-    private int aeronaveId;
+    private Long aeronaveId;
 
     public VooDTO(VooEntity entity) {
         this.id = entity.getId();
