@@ -1,16 +1,9 @@
 package org.skyreserve.app.service.TestLocal;
 
-import org.skyreserve.app.service.postgres.*;
-import org.skyreserve.domain.dto.*;
-import org.skyreserve.domain.enums.StatusPagamentoEnum;
-import org.skyreserve.domain.enums.TipoVooEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Service
 public class DBServiceLocal {
@@ -19,82 +12,57 @@ public class DBServiceLocal {
     boolean local;
 
     @Autowired
-    private AeronaveService aeronaveService;
-
-    @Autowired
-    private AssentoService assentoService;
-
-    @Autowired
-    private PassageiroService passageiroService;
-
-    @Autowired
-    private VooService vooService;
-
-    @Autowired
-    private PagamentoService pagamentoService;
-
-    @Autowired
-    private ReservaService reservaService;
+    private DatabaseClient databaseClient;
 
     public void instanciaDB() {
         if (local) {
             System.out.println("Iniciando a aplicação com valores iniciais.");
 
-            aeronaveService.save(AeronaveDTO.builder()
-                    .limiteAssentos(50)
-                    .matricula("123AXD1")
-                    .build());
+            // INSERÇÃO DO PASSAGEIRO
+            databaseClient.sql("INSERT INTO public.passageiro\n" +
+                            "(id, nome, cpf, email, numero_passaporte, data_nascimento, celular)\n" +
+                            "VALUES(nextval('passageiro_id_seq'::regclass), 'Fulano de Tal', '22222222222', 'teste@teste.com', 'AHX1151', TO_DATE('31/01/2000','dd/MM/YYYY'), '(11)98888-5555');")
+                    .fetch().rowsUpdated().block();
 
-            assentoService.save(AssentoDTO.builder()
-                    .aeronaveId(1L)
-                    .descricao("A1")
-                    .reservado(false)
-                    .descricao("Fileira A - Assento 1")
-                    .build());
 
-            passageiroService.save(PassageiroDTO.builder()
-                    .nome("Fulano de Tal da Silva")
-                    .email("teste@teste.com")
-                    .dataNascimento(LocalDate.now().plusYears(18))
-                    .celular("(11)98765-4321")
-                    .cpf("22299933344")
-                    .numeroPassaporte("454889")
-                    .build());
+            // INSERÇÃO DO AERONAVE
+            databaseClient.sql("INSERT INTO public.aeronave\n" +
+                            "(id, matricula, limite_assentos)\n" +
+                            "VALUES(nextval('aeronave_id_seq'::regclass), 'AEW105D', 50);")
+                    .fetch().rowsUpdated().block();
 
-            passageiroService.save(PassageiroDTO.builder()
-                    .nome("Fulano de Tal da Silva")
-                    .email("teste@teste.com")
-                    .dataNascimento(LocalDate.now().plusYears(18))
-                    .celular("(11)98765-4321")
-                    .cpf("22299933344")
-                    .numeroPassaporte("454889")
-                    .build());
 
-            vooService.save(VooDTO.builder()
-                    .dataHoraChegada(LocalDateTime.now().plusDays(5))
-                    .dataHoraChegada(LocalDateTime.now().plusDays(5).plusHours(10))
-                    .origem("São Paulo")
-                    .destino("Rio de Janeiro")
-                    .aeronaveId(1L)
-                    .build());
+            // INSERÇÃO DO ASSENTO
+            databaseClient.sql("INSERT INTO public.assento\n" +
+                            "(id, descricao, reservado, aeronave_id)\n" +
+                            "VALUES(nextval('assento_id_seq'::regclass), 'A1', false, 1);")
+                    .fetch().rowsUpdated().block();
 
-            pagamentoService.save(PagamentoDTO.builder()
-                    .dataPagamento(LocalDateTime.now())
-                    .statusPagamento(StatusPagamentoEnum.PENDENTE_PAGAMENTO)
-                    .valorTotal(new BigDecimal("598.56"))
-                    .build());
 
-            reservaService.save(ReservaDTO.builder()
-                    .bagagem(false)
-                    .tipoVoo(TipoVooEnum.IDA_E_VOLTA)
-                    .valorReserva(new BigDecimal("598.56"))
-                    .dataDaReserva(LocalDateTime.now())
-                    .vooId(1L)
-                    .assentoId(1L)
-                    .passageiroId(1L)
-                    .pagamentoId(1L)
-                    .build());
+            // INSERÇÃO DO VÔO
+            databaseClient.sql("INSERT INTO public.voo\n" +
+                            "(id, origem, destino, data_hora_partida, data_hora_chegada, aeronave_id)\n" +
+                            "VALUES(nextval('voo_id_seq'::regclass),\n" +
+                            "'São Paulo', \n" +
+                            "'Rio de Janeiro', TO_DATE('31/01/2000','dd/MM/YYYY'), TO_DATE('01/02/2000','dd/MM/YYYY'), 1);")
+                    .fetch().rowsUpdated().block();
+
+
+            // INSERÇÃO DO PAGAMENTO
+            databaseClient.sql("INSERT INTO public.pagamento\n" +
+                            "(id, data_pagamento, valor_total, status_pagamento)\n" +
+                            "VALUES(nextval('pagamento_id_seq'::regclass), TO_DATE('10/07/2024','dd/MM/YYYY'), 589.45, 'PENDENTE_PAGAMENTO');")
+                    .fetch().rowsUpdated().block();
+
+
+            // INSERÇÃO DO RESERVA
+            databaseClient.sql("INSERT INTO public.reserva\n" +
+                            "(id, passageiro_id, voo_id, assento_id, pagamento_id, data_da_reserva, bagagem, tipo_voo, valor_reserva)\n" +
+                            "VALUES(nextval('reserva_id_seq'::regclass), 1, 1, 1, 1, TO_DATE('10/07/2024','dd/MM/YYYY'), false, 'IDA_E_VOLTA', 589.45);")
+                    .fetch().rowsUpdated().block();
+
+
         }
-        
+
     }
 }
