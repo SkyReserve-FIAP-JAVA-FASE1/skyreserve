@@ -74,6 +74,7 @@ public class DBServiceLocal {
                                 "(id, passageiro_id, voo_id, assento_id, pagamento_id, data_da_reserva, bagagem, tipo_voo, valor_reserva)\n" +
                                 "VALUES(nextval('reserva_id_seq'::regclass), 1, 1, 1, 1, TO_DATE('10/07/2024','dd/MM/YYYY'), false, 'IDA_E_VOLTA', 589.45);")
                         .fetch().rowsUpdated().block();
+                
             }
 
         }
