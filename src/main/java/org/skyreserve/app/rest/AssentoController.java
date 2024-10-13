@@ -1,6 +1,5 @@
 package org.skyreserve.app.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.kafka.producer.KafkaProducer;
 import org.skyreserve.app.service.postgres.AssentoService;
@@ -23,9 +22,6 @@ public class AssentoController {
 
     @Autowired
     private AssentoService service;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<AssentoEntity> getAssentosAtualizados() {
