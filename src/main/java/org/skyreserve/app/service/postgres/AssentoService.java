@@ -2,7 +2,6 @@ package org.skyreserve.app.service.postgres;
 
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.AssentoDTO;
-import org.skyreserve.domain.dto.ReservaDTO;
 import org.skyreserve.domain.entity.AssentoEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.AssentoRepository;
@@ -42,7 +41,7 @@ public class AssentoService {
     public Mono<AssentoEntity> save(AssentoDTO obj) {
         return repository.save(new AssentoEntity(obj))
                 .doOnSuccess(savedEntity -> {
-                    notifyAssentoChanged(savedEntity);
+                    notifyListAssentoChanged();
                     log.info("Assento salvo");
                 })
                 .doOnError(error -> log.error("Erro ao salvar assento: ", error));
@@ -58,9 +57,9 @@ public class AssentoService {
                     entity.setAeronaveId(objDTO.getAeronaveId());
                     return repository.save(entity);
                 }).doOnSuccess(entitySuccess -> {
-                        log.info("Assento atualizado");
-                        notifyAssentoChanged(entitySuccess);
-                    }
+                            log.info("Assento atualizado");
+                            notifyListAssentoChanged();
+                        }
                 )
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
     }
@@ -74,8 +73,18 @@ public class AssentoService {
     public void notifyAssentoChanged(AssentoEntity reserva) {
         for (FluxSink<AssentoEntity> subscriber : subscribers) {
             subscriber.next(reserva);
-            log.info("Notificação enviada: {}", new AssentoDTO(reserva));
+            log.info("Notificação de um único assento enviada: {}", new AssentoDTO(reserva));
         }
+    }
+
+    public void notifyListAssentoChanged() {
+        repository.findAll().collectList()
+                .subscribe(allAssentos -> {
+                    for (FluxSink<AssentoEntity> subscriber : subscribers) {
+                        allAssentos.forEach(subscriber::next);
+                        log.info("Notificação enviada com todos os assentos enviada.");
+                    }
+                });
     }
 
 }
