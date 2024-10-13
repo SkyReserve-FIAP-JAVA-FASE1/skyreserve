@@ -34,7 +34,9 @@ public class AssentoService {
     }
 
     public Mono<Void> deleteById(Long id) {
-        return repository.deleteById(id);
+        return repository.deleteById(id)
+                .doOnSuccess(deletedEntity -> log.info("Assento deletado"))
+                .doOnError(error -> log.error("Erro ao deletar assento: ", error));
     }
 
     public Mono<AssentoEntity> save(AssentoDTO obj) {
@@ -49,14 +51,17 @@ public class AssentoService {
     public Mono<AssentoEntity> update(Long id, AssentoDTO objDTO) {
         return repository.findById(id)
                 .flatMap(entity -> {
-                    notifyAssentoChanged(entity);
                     entity.setId(id);
                     entity.setNome(objDTO.getNome());
                     entity.setDescricao(objDTO.getDescricao());
                     entity.setReservado(objDTO.isReservado());
                     entity.setAeronaveId(objDTO.getAeronaveId());
                     return repository.save(entity);
-                })
+                }).doOnSuccess(entitySuccess -> {
+                        log.info("Assento atualizado");
+                        notifyAssentoChanged(entitySuccess);
+                    }
+                )
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
     }
 
@@ -68,8 +73,8 @@ public class AssentoService {
 
     public void notifyAssentoChanged(AssentoEntity reserva) {
         for (FluxSink<AssentoEntity> subscriber : subscribers) {
-            log.info("Notificação enviada: {}", new AssentoDTO(reserva).toString());
             subscriber.next(reserva);
+            log.info("Notificação enviada: {}", new AssentoDTO(reserva));
         }
     }
 
