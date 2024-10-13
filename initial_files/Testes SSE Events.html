@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste SSE</title>
+</head>
+<body>
+    <h1>Testando Server-Sent Events</h1>
+    <div id="output"></div>
+
+    <script>
+		// Basta subir o projeto no BackEnd e chamar o endpoint de Salvar ou Atualizar Assento. Assim chegará um retorno com event SSE.
+        // Criar a conexão com o endpoint do SSE
+        const eventSource = new EventSource('http://localhost:8080/assento/stream');
+
+        // Função para tratar as mensagens recebidas
+        eventSource.onmessage = function(event) {
+            console.log('Evento SSE recebido:', event.data);
+
+            // Exibir a alteração na página
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML += `<p>Assento atualizado: ${event.data}</p>`;
+        };
+
+        // Função para tratar erros na conexão SSE
+        eventSource.onerror = function(error) {
+            console.error('Erro SSE:', error);
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML += `<p style="color: red;">Erro na conexão com SSE</p>`;
+        };
+    </script>
+</body>
+</html>
