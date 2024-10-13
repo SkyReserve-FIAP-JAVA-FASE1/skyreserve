@@ -8,6 +8,7 @@ import org.skyreserve.domain.dto.AssentoDTO;
 import org.skyreserve.domain.entity.AssentoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,6 +26,11 @@ public class AssentoController {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<AssentoEntity> getAssentosAtualizados() {
+        return service.getAssentosAtualizados();
+    }
 
     @GetMapping("/{id}")
     public Mono<AssentoEntity> findById(@PathVariable Long id) {
