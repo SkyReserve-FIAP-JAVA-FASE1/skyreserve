@@ -38,8 +38,8 @@ public class AssentoController {
     }
 
     @GetMapping
-    public Flux<AssentoEntity> findAll() {
-        return service.findAll();
+    public Flux<AssentoEntity> findAllByOrderByIdDesc() {
+        return service.findAllByOrderByIdDesc();
     }
 
     @PostMapping

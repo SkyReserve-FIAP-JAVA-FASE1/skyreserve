@@ -28,8 +28,8 @@ public class AssentoService {
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
     }
 
-    public Flux<AssentoEntity> findAll() {
-        return repository.findAll();
+    public Flux<AssentoEntity> findAllByOrderByIdDesc() {
+        return repository.findAllByOrderByIdDesc();
     }
 
     public Mono<Void> deleteById(Long id) {
@@ -78,7 +78,7 @@ public class AssentoService {
     }
 
     public void notifyListAssentoChanged() {
-        repository.findAll().collectList()
+        repository.findAllByOrderByIdDesc().collectList()
                 .subscribe(allAssentos -> {
                     for (FluxSink<AssentoEntity> subscriber : subscribers) {
                         allAssentos.forEach(subscriber::next);
