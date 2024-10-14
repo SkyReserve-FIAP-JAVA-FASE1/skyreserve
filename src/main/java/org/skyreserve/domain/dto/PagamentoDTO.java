@@ -19,12 +19,14 @@ public class PagamentoDTO {
     private LocalDateTime dataPagamento;
     private BigDecimal valorTotal;
     private StatusPagamentoEnum statusPagamento;
+    private Long reservaId;
 
     public PagamentoDTO(PagamentoEntity entity) {
         this.id = entity.getId();
         this.dataPagamento = entity.getDataPagamento();
         this.valorTotal = entity.getValorTotal();
         this.statusPagamento = entity.getStatusPagamento();
+        this.reservaId = entity.getReservaId();
     }
 
 
@@ -35,6 +37,7 @@ public class PagamentoDTO {
                 ", dataPagamento='" + dataPagamento + '\'' +
                 ", valorTotal='" + valorTotal + '\'' +
                 ", statusPagamento=" + statusPagamento +
+                ", reservaId=" + reservaId +
                 '}';
     }
 

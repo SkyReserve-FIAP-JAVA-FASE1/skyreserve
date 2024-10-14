@@ -24,6 +24,7 @@ public class PagamentoEntity implements Serializable {
     private LocalDateTime dataPagamento;
     private BigDecimal valorTotal;
     private StatusPagamentoEnum statusPagamento;
+    private Long reservaId;
 
     public PagamentoEntity(PagamentoDTO dto) {
         if (dto != null) {
@@ -31,6 +32,7 @@ public class PagamentoEntity implements Serializable {
             this.dataPagamento = dto.getDataPagamento();
             this.valorTotal = dto.getValorTotal();
             this.statusPagamento = dto.getStatusPagamento();
+            this.reservaId = dto.getReservaId();
 
         }
     }

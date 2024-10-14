@@ -44,6 +44,7 @@ public class PagamentoService {
                     entity.setDataPagamento(objDTO.getDataPagamento());
                     entity.setValorTotal(objDTO.getValorTotal());
                     entity.setStatusPagamento(objDTO.getStatusPagamento());
+                    entity.setReservaId(objDTO.getReservaId());
                     return repository.save(entity);
                 })
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Pagamento não encontrado com id: " + id)));

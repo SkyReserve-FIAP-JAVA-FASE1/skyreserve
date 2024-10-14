@@ -68,7 +68,8 @@ public class PostgreSQLInitDatabase {
                         "    id SERIAL PRIMARY KEY,\n" +
                         "    data_pagamento TIMESTAMP NOT NULL,\n" +
                         "    valor_total NUMERIC(15, 2) NOT NULL,\n" +
-                        "    status_pagamento VARCHAR(50) NOT NULL\n" +
+                        "    status_pagamento VARCHAR(50) NOT NULL, \n" +
+                        "    reserva_id BIGINT\n" +
                         ");")
                 .fetch().rowsUpdated().block();
 
@@ -92,7 +93,19 @@ public class PostgreSQLInitDatabase {
                         ");")
                 .fetch().rowsUpdated().block();
 
-
+        // FK PAGAMENTO -> RESERVA_ID
+        databaseClient.sql("DO $$\n" +
+                        "BEGIN\n" +
+                        "    IF NOT EXISTS (\n" +
+                        "        SELECT 1\n" +
+                        "        FROM pg_constraint\n" +
+                        "        WHERE conname = 'fk_reservaid'\n" +
+                        "    ) THEN\n" +
+                        "        ALTER TABLE pagamento\n" +
+                        "        ADD CONSTRAINT fk_reservaId FOREIGN KEY (reserva_id) REFERENCES reserva(id);\n" +
+                        "    END IF;\n" +
+                        "END $$;")
+                .fetch().rowsUpdated().block();
 
 
     }

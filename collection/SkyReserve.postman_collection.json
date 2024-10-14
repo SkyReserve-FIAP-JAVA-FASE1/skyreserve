@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.75\r\n}\r\n",
+							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.79\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -33,6 +33,37 @@
 							"port": "8080",
 							"path": [
 								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tela inicial",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.79\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								""
 							]
 						}
 					},
@@ -321,6 +352,35 @@
 							"path": [
 								"assento",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nome\": \"A1F1\",\r\n    \"descricao\": \"Assento 1 - Fileira 1\",\r\n    \"reservado\": true,\r\n    \"aeronaveId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/assento/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"assento",
+								"1"
 							]
 						}
 					},
@@ -622,7 +682,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"dataPagamento\": \"2024-10-30T23:50:10\",\r\n    \"valorTotal\": 587.65,\r\n    \"statusPagamento\": \"PENDENTE_PAGAMENTO\"\r\n}",
+							"raw": "{\r\n    \"dataPagamento\": \"2024-10-30T23:50:10\",\r\n    \"valorTotal\": 587.65,\r\n    \"statusPagamento\": \"PENDENTE_PAGAMENTO\",\r\n    \"reservaId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

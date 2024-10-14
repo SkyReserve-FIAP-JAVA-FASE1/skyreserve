@@ -45,7 +45,8 @@ CREATE TABLE IF NOT EXISTS pagamento (
     id SERIAL PRIMARY KEY,
     data_pagamento TIMESTAMP NOT NULL,
     valor_total NUMERIC(15, 2) NOT NULL,
-    status_pagamento VARCHAR(50) NOT NULL
+    status_pagamento VARCHAR(50) NOT NULL,
+    reserva_id BIGINT NULL
 );
 
 
@@ -66,5 +67,19 @@ CREATE TABLE IF NOT EXISTS reserva (
     CONSTRAINT fk_assento FOREIGN KEY (assento_id) REFERENCES assento(id),
     CONSTRAINT fk_pagamento FOREIGN KEY (pagamento_id) REFERENCES pagamento(id)
 );
+
+-- FK PAGAMENTO -> RESERVA_ID
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM pg_constraint
+        WHERE conname = 'fk_reservaid'
+    ) THEN
+        ALTER TABLE pagamento
+        ADD CONSTRAINT fk_reservaId FOREIGN KEY (reserva_id) REFERENCES reserva(id);
+    END IF;
+END $$;
+
 
 
