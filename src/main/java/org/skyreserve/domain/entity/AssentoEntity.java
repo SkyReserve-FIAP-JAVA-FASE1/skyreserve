@@ -19,7 +19,6 @@ public class AssentoEntity implements Serializable {
     private Long id;
     private String nome;
     private String descricao;
-    private boolean reservado = false;
     private Long aeronaveId;
 
     public AssentoEntity(AssentoDTO dto) {
@@ -27,7 +26,6 @@ public class AssentoEntity implements Serializable {
             this.id = dto.getId();
             this.nome = dto.getNome();
             this.descricao = dto.getDescricao();
-            this.reservado = dto.isReservado();
             this.aeronaveId = dto.getAeronaveId();
         }
     }

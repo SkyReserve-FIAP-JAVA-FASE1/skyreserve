@@ -12,8 +12,7 @@ CREATE TABLE IF NOT exists assento (
                     id BIGSERIAL PRIMARY KEY,
                     nome VARCHAR(255) NOT NULL,
                     descricao VARCHAR(255) NOT NULL,
-                    reservado BOOLEAN DEFAULT false,
-                  aeronave_id BIGINT NOT NULL,
+                    aeronave_id BIGINT NOT NULL,
                     FOREIGN KEY (aeronave_id) REFERENCES aeronave(id) ON DELETE CASCADE
                 );
 
@@ -44,6 +43,17 @@ CREATE TABLE IF NOT EXISTS voo (
                         FOREIGN KEY (aeronave_id) REFERENCES aeronave (id)
                 );
 
+
+-- TABLE VOOASSENTO
+CREATE TABLE IF NOT EXISTS vooassento (
+                    id SERIAL PRIMARY KEY,
+                    reservado BOOLEAN DEFAULT FALSE,
+                    nome_assento VARCHAR(255),
+                    voo_id INT NOT NULL,
+					assento_id INT NOT NULL,
+                    CONSTRAINT fk_vooassento_voo FOREIGN KEY (voo_id) REFERENCES voo (id),
+                    CONSTRAINT fk_vooassento_assento FOREIGN KEY (assento_id) REFERENCES assento (id)
+                );
 
 
 -- TABLE PAGAMENTO

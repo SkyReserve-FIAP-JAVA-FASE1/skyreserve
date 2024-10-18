@@ -48,23 +48,23 @@ public class DBServiceLocal {
 
                 // INSERÇÃO DO ASSENTO
                 databaseClient.sql("INSERT INTO public.assento\n" +
-                                "(id, descricao, nome, reservado, aeronave_id)\n" +
-                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 1 - Fileira 1' ,'A1F1' , false, 1);")
+                                "(id, descricao, nome, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 1 - Fileira 1' ,'A1F1' , 1);")
                         .fetch().rowsUpdated().block();
 
                 databaseClient.sql("INSERT INTO public.assento\n" +
-                                "(id, descricao, nome, reservado, aeronave_id)\n" +
-                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 2 - Fileira 1' ,'A2F1' , false, 1);")
+                                "(id, descricao, nome, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 2 - Fileira 1' ,'A2F1' , 1);")
                         .fetch().rowsUpdated().block();
 
                 databaseClient.sql("INSERT INTO public.assento\n" +
-                                "(id, descricao, nome, reservado, aeronave_id)\n" +
-                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 3 - Fileira 1' ,'A3F1' , false, 1);")
+                                "(id, descricao, nome, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 3 - Fileira 1' ,'A3F1' , 1);")
                         .fetch().rowsUpdated().block();
 
                 databaseClient.sql("INSERT INTO public.assento\n" +
-                                "(id, descricao, nome, reservado, aeronave_id)\n" +
-                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 4 - Fileira 1' ,'A4F1' , false, 1);")
+                                "(id, descricao, nome, aeronave_id)\n" +
+                                "VALUES(nextval('assento_id_seq'::regclass), 'Assento 4 - Fileira 1' ,'A4F1', 1);")
                         .fetch().rowsUpdated().block();
 
 
@@ -75,6 +75,18 @@ public class DBServiceLocal {
                                 "'São Paulo', \n" +
                                 "'Rio de Janeiro', TO_DATE('31/01/2000','dd/MM/YYYY'), TO_DATE('01/02/2000','dd/MM/YYYY'), 1);")
                         .fetch().rowsUpdated().block();
+
+                // INSERÇÃO DO ASSENTO VÔO
+                databaseClient.sql("INSERT INTO public.vooassento\n" +
+                                "(id, reservado, nome_assento, voo_id, assento_id)\n" +
+                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A1', 1, 1);")
+                        .fetch().rowsUpdated().block();
+
+                databaseClient.sql("INSERT INTO public.vooassento\n" +
+                                "(id, reservado, nome_assento, voo_id, assento_id)\n" +
+                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A1', 1, 2);")
+                        .fetch().rowsUpdated().block();
+
 
 
                 // INSERÇÃO DO PAGAMENTO

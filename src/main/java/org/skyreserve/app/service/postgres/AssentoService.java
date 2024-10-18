@@ -6,15 +6,9 @@ import org.skyreserve.domain.entity.AssentoEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.AssentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.FluxSink;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -23,29 +17,6 @@ public class AssentoService {
     @Autowired
     private AssentoRepository repository;
 
-    private final List<FluxSink<AssentoEntity>> subscribers = new ArrayList<>();
-    private static final String ASSENTO_PREFIX = "assento:";  // Prefixo para as chaves dos assentos
-    private final ReactiveValueOperations<String, Boolean> valueOperations;
-
-    public AssentoService(ReactiveRedisTemplate<String, Boolean> redisTemplate) {
-        this.valueOperations = redisTemplate.opsForValue();
-    }
-
-    public Mono<Boolean> bloquearAssento(String assentoId) {
-        String key = ASSENTO_PREFIX + assentoId;
-        return valueOperations.set(key, true);
-    }
-
-    public Mono<Boolean> desbloquearAssento(String assentoId) {
-        String key = ASSENTO_PREFIX + assentoId;
-        return valueOperations.delete(key).map(result -> result != null && result);
-    }
-
-    public Mono<Boolean> isAssentoDesbloqueado(String assentoId) {
-        String key = ASSENTO_PREFIX + assentoId;
-        return valueOperations.get(key).defaultIfEmpty(false).map(isBlocked -> !isBlocked);
-    }
-
     public Mono<AssentoEntity> findById(Long id) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
@@ -53,10 +24,6 @@ public class AssentoService {
 
     public Flux<AssentoEntity> findAllByAeronaveId(Long aeronaveId) {
         return repository.findAllByAeronaveId(aeronaveId);
-    }
-
-    public Flux<AssentoEntity> findAllByOrderByIdAsc() {
-        return repository.findAllByOrderByIdAsc();
     }
 
     public Mono<Void> deleteById(Long id) {
@@ -68,7 +35,6 @@ public class AssentoService {
     public Mono<AssentoEntity> save(AssentoDTO obj) {
         return repository.save(new AssentoEntity(obj))
                 .doOnSuccess(savedEntity -> {
-                    notifyListAssentoChanged();
                     log.info("Assento salvo");
                 })
                 .doOnError(error -> log.error("Erro ao salvar assento: ", error));
@@ -80,38 +46,15 @@ public class AssentoService {
                     entity.setId(id);
                     entity.setNome(objDTO.getNome());
                     entity.setDescricao(objDTO.getDescricao());
-                    entity.setReservado(objDTO.isReservado());
                     entity.setAeronaveId(objDTO.getAeronaveId());
                     return repository.save(entity);
                 }).doOnSuccess(entitySuccess -> {
                             log.info("Assento atualizado");
-                            notifyListAssentoChanged();
                         }
                 )
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
     }
 
-    public Flux<AssentoEntity> getAssentosAtualizados() {
-        return Flux.create(subscriber -> {
-            subscribers.add(subscriber.onDispose(() -> subscribers.remove(subscriber)));
-        });
-    }
 
-    public void notifyAssentoChanged(AssentoEntity reserva) {
-        for (FluxSink<AssentoEntity> subscriber : subscribers) {
-            subscriber.next(reserva);
-            log.info("Notificação de um único assento enviada: {}", new AssentoDTO(reserva));
-        }
-    }
-
-    public void notifyListAssentoChanged() {
-        repository.findAllByOrderByIdAsc().collectList()
-                .subscribe(allAssentos -> {
-                    for (FluxSink<AssentoEntity> subscriber : subscribers) {
-                        allAssentos.forEach(subscriber::next);
-                        log.info("Notificação enviada com todos os assentos enviada.");
-                    }
-                });
-    }
 
 }

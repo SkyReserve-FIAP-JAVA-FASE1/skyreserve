@@ -213,7 +213,7 @@
         }
 		
 		// Criar a conexão com o endpoint do SSE
-		const eventSource = new EventSource('http://localhost:8080/assento/stream/' + aeronaveId);
+		const eventSource = new EventSource('http://localhost:8080/vooassento/stream/' + aeronaveId);
 
         // Função para tratar as mensagens recebidas
         eventSource.onmessage = function(event) {
@@ -242,16 +242,16 @@
 				const novoAssentoDiv = document.createElement('div');
 				novoAssentoDiv.id = assento.id;
 				novoAssentoDiv.innerHTML = !assento.reservado
-					? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`
-					: `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
+					? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nomeAssento}</div>`
+					: `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nomeAssento}</div>`;
 				conteudoDiv.appendChild(novoAssentoDiv);
 			} else {
 				// Se a div já existe, atualiza o estado
 				const divExistente = document.getElementById(assento.id);
 				if (!assento.reservado) {
-					divExistente.innerHTML = `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`;
+					divExistente.innerHTML = `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nomeAssento}</div>`;
 				} else {
-					divExistente.innerHTML = `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
+					divExistente.innerHTML = `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nomeAssento}</div>`;
 				}
 			}
 				

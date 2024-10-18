@@ -4,10 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.postgres.AssentoService;
 import org.skyreserve.app.service.postgres.ReservaService;
+import org.skyreserve.app.service.postgres.VooAssentoService;
 import org.skyreserve.domain.dto.ReservaDTO;
 import org.skyreserve.domain.entity.ReservaEntity;
 import org.skyreserve.infra.exceptions.AssentoIsReservedException;
-import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +28,9 @@ public class ReservaController {
     @Autowired
     private AssentoService assentoService;
 
+    @Autowired
+    private VooAssentoService vooAssentoService;
+
     @GetMapping("/{id}")
     public Mono<ReservaEntity> findById(@PathVariable Long id) {
         return service.findById(id);
@@ -41,7 +44,7 @@ public class ReservaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ReservaEntity> save(@RequestBody ReservaEntity reservaEntity) {
-        return assentoService.isAssentoDesbloqueado(reservaEntity.getAssentoId().toString())
+        return vooAssentoService.isAssentoDesbloqueado(reservaEntity.getAssentoId().toString())
                 .flatMap(isDesbloqueado -> {
                     if (isDesbloqueado) {
                         return service.save(new ReservaDTO(reservaEntity));

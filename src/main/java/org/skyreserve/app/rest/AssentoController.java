@@ -6,7 +6,6 @@ import org.skyreserve.domain.dto.AssentoDTO;
 import org.skyreserve.domain.entity.AssentoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,11 +18,6 @@ public class AssentoController {
     @Autowired
     private AssentoService service;
 
-    @GetMapping(value = "/stream/{aeronaveid}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<AssentoEntity> getAssentosAtualizadosPelaAeronave(@PathVariable Long aeronaveid) {
-        return service.getAssentosAtualizados().filter(assentoEntity -> assentoEntity.getAeronaveId().equals(aeronaveid));
-    }
-
     @GetMapping("/{id}")
     public Mono<AssentoEntity> findById(@PathVariable Long id) {
         return service.findById(id);
@@ -32,11 +26,6 @@ public class AssentoController {
     @GetMapping("/aeronave/{aeronaveid}")
     public Flux<AssentoEntity> findAllByAeronaveId(@PathVariable Long aeronaveid) {
         return service.findAllByAeronaveId(aeronaveid);
-    }
-
-    @GetMapping
-    public Flux<AssentoEntity> findAllByOrderByIdAsc() {
-        return service.findAllByOrderByIdAsc();
     }
 
     @PostMapping
@@ -56,18 +45,4 @@ public class AssentoController {
         return service.deleteById(id);
     }
 
-    @PostMapping("/bloquear/{id}")
-    public Mono<Boolean> bloquearAssento(@PathVariable String id) {
-        return service.bloquearAssento(id);
-    }
-
-    @PostMapping("/desbloquear/{id}")
-    public Mono<Boolean> desbloquearAssento(@PathVariable String id) {
-        return service.desbloquearAssento(id);
-    }
-
-    @GetMapping("/estado/{id}")
-    public Mono<Boolean> isAssentoDesbloqueado(@PathVariable String id) {
-        return service.isAssentoDesbloqueado(id);
-    }
 }

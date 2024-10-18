@@ -29,7 +29,6 @@ public class PostgreSQLInitDatabase {
                         "    id BIGSERIAL PRIMARY KEY,\n" +
                         "    nome VARCHAR(255) NOT NULL,\n" +
                         "    descricao VARCHAR(255) NOT NULL,\n" +
-                        "    reservado BOOLEAN DEFAULT false,\n" +
                         "  \taeronave_id BIGINT NOT NULL,\n" +
                         "    FOREIGN KEY (aeronave_id) REFERENCES aeronave(id) ON DELETE CASCADE\n" +
                         ")")
@@ -60,6 +59,19 @@ public class PostgreSQLInitDatabase {
                         "    CONSTRAINT fk_aeronave\n" +
                         "        FOREIGN KEY (aeronave_id) REFERENCES aeronave (id)\n" +
                         ");")
+                .fetch().rowsUpdated().block();
+
+
+        // TABLE VOOASSENTO
+        databaseClient.sql("CREATE TABLE IF NOT EXISTS vooassento (\n" +
+                        "                    id SERIAL PRIMARY KEY,\n" +
+                        "                    reservado BOOLEAN DEFAULT FALSE,\n" +
+                        "                    nome_assento VARCHAR(255),\n" +
+                        "                    voo_id INT NOT NULL,\n" +
+                        "                    assento_id INT NOT NULL,\n" +
+                        "                    CONSTRAINT fk_vooassento_voo FOREIGN KEY (voo_id) REFERENCES voo (id),\n" +
+                        "                    CONSTRAINT fk_vooassento_assento FOREIGN KEY (assento_id) REFERENCES assento (id)\n" +
+                        "                );")
                 .fetch().rowsUpdated().block();
 
 
