@@ -5,276 +5,268 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reserva de Assento</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f4f4f4;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh; /* Ocupar toda a altura da tela */
+		}
 
-        .container {
-            background-color: white;
-            border-radius: 10px;
-            padding: 20px;
-            width: 90%;
-            max-width: 800px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+		.container {
+			background-color: white;
+			border-radius: 10px;
+			padding: 20px;
+			width: 100vw; /* Ocupar toda a largura da tela */
+			height: 100vh; /* Ocupar toda a altura da tela */
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			overflow: auto; /* Adiciona scroll se necessário */
+			display: flex;
+			flex-direction: column; /* Flexbox para organizar elementos na coluna */
+			justify-content: center; /* Centraliza verticalmente */
+		}
 
-        h1 {
-            text-align: center;
-        }
+		h1 {
+			text-align: center;
+		}
 
-        .airplane {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            justify-items: center;
-            margin: 20px 0;
-        }
+		.airplane {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr); /* Limita a 4 colunas */
+			gap: 10px;
+			justify-items: center;
+			margin: 20px 0;
+			overflow:auto;
+		}
 
-        .seat {
-			width: 100px;
-			height: 100px;
+		.seat {
+			width: 100px; /* Aumenta o tamanho do assento */
+			height: 100px; /* Aumenta o tamanho do assento */
 			background-color: #b9b9b9;
 			border-radius: 5px;
 			display: flex;
 			justify-content: center;
 			align-items: center;
 			cursor: pointer;
-			font-size: 16px; /* Tamanho da fonte do nome do assento */
+			font-size: 20px; /* Aumenta o tamanho da fonte */
 			color: white; /* Cor do texto */
 		}
 
-        .seat.selected {
-            background-color: #67c667;
-        }
+		.seat.selected {
+			background-color: #67c667;
+		}
 
-        .seat.occupied {
-            background-color: #e57c7c;
-            cursor: not-allowed;
-        }
+		.seat.occupied {
+			background-color: #e57c7c;
+			cursor: not-allowed;
+		}
 
-        .seat:hover:not(.occupied) {
-            background-color: #2a612a;
-        }
+		.seat:hover:not(.occupied) {
+			background-color: #2a612a;
+		}
 
-        .legend {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
+		.legend {
+			display: flex;
+			justify-content: space-around;
+			margin-top: 20px;
+		}
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+		.legend-item {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
 
-        .legend .seat {
-            margin: 0;
-        }
+		.legend .seat {
+			margin: 0;
+		}
 
-        .reserve-button {
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-        }
+		.reserve-button {
+			width: 100%;
+			padding: 15px; /* Aumenta o espaço do botão */
+			font-size: 22px; /* Aumenta o tamanho da fonte do botão */
+			background-color: #28a745;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			text-align: center;
+			margin-top: 20px; /* Adiciona espaço acima do botão */
+		}
 
-        .reserve-button:disabled {
-            background-color: #999;
-            cursor: not-allowed;
-        }
+		.reserve-button:disabled {
+			background-color: #999;
+			cursor: not-allowed;
+		}
 
-        .svg-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
+		.svg-container {
+			display: flex;
+			justify-content: center;
+			margin-bottom: 20px;
+		}
+
+		/* Media queries para ajuste em telas menores */
+		@media (max-width: 600px) {
+			.seat {
+				width: 60px; /* Diminuir tamanho do assento em telas menores */
+				height: 60px;
+				font-size: 16px; /* Diminuir tamanho da fonte */
+			}
+			
+			.airplane {
+				grid-template-columns: repeat(4, 1fr); /* Mantém 4 colunas em telas menores */
+			}
+		}
+
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="svg-container">
-        <svg width="150px" height="150px" viewBox="0 0 1024 1024" class="icon" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <path d="M85.333333 789.333333h853.333334v85.333334H85.333333z" fill="#546E7A" />
-            <path d="M673.024 306.709333s-223.594667-152.832-266.069333-156.8C364.458667 145.984 320 163.264 320 163.264l177.173333 191.381333 175.850667-47.936z" fill="#7986CB" />
-            <path d="M42.666667 256l133.098666 191.808 121.557334-88.810667L106.666667 234.666667z" fill="#3F51B5" />
-            <path d="M245.141333 368.704s371.029333-133.845333 472.874667-165.632c122.218667-38.101333 235.093333 13.546667 242.005333 35.669333 6.336 20.330667-26.133333 53.397333-156.8 94.186667-130.666667 40.768-391.381333 140.224-391.381333 140.224S224.341333 532.032 64 448c113.493333-54.037333 181.141333-79.296 181.141333-79.296z" fill="#9FA8DA" />
-            <path d="M686.933333 374.656c-5.248 29.696-121.856 252.053333-156.821333 276.544C495.168 675.669333 448 682.666667 448 682.666667c54.208-220.565333 55.04-220.394667 62.421333-262.549334 5.226667-29.717333 181.76-75.157333 176.512-45.461333z" fill="#9FA8DA" />
-            <path d="M923.669333 212.266667c-16.490667-7.296-37.994667-13.866667-62.549333-18.112l10.432 34.090666 52.117333-15.978666zM797.909333 206.165333l40.810667-12.501333 12.501333 40.832-40.810666 12.501333z" fill="#283593" />
-            <path d="M438.741333 378.922667m-21.333333 0a21.333333 21.333333 0 1 0 42.666667 0 21.333333 21.333333 0 1 0-42.666667 0Z" fill="#283593" />
-            <path d="M519.338667 350.954667m-21.333334 0a21.333333 21.333333 0 1 0 42.666667 0 21.333333 21.333333 0 1 0-42.666667 0Z" fill="#283593" />
-            <path d="M620.096 315.946667a21.376 21.376 0 0 1-13.098667 27.2 21.44 21.44 0 0 1-27.2-13.205334 21.397333 21.397333 0 0 1 13.141334-27.157333 21.376 21.376 0 0 1 27.157333 13.162667z" fill="#283593" />
-            <path d="M680.597333 294.976m-21.333333 0a21.333333 21.333333 0 1 0 42.666667 0 21.333333 21.333333 0 1 0-42.666667 0Z" fill="#283593" />
-        </svg>
+    <div class="container">
+	
+        <div class="airplane" id="conteudo"></div>
+
+        <button onclick="finalizar()" class="reserve-button" id="reserveButton" disabled>Reservar Assento</button>
+		
+		
     </div>
 
-    <h1>Reserva de Assento</h1>
-
-    <div class="airplane" id="conteudo"></div>
-
-    <button onclick="finalizar()" class="reserve-button" id="reserveButton" disabled>Reservar Assento</button>
-
-    <br><br>
-    <h4 style="cursor:pointer" align="center" id="duvida" onclick="duvidas()"><span id="conteudoDuvida">Dúvidas, clique aqui</span><h4>
-
-</div>
-
-<script>
-    var seats = document.querySelectorAll('.seat:not(.occupied)');
-    var reserveButton = document.getElementById('reserveButton');
-    let selectedSeat = null;
-    var conteudo = '';
-
-    // Função chamada ao carregar a página
-    window.onload = async function() {
-        try {
-            const response = await fetch('http://localhost:8080/assento/');
-            const dataLoad = await response.json();
-            for (var i = 0; i < dataLoad.length; i++) {
-                preencherAssentoIniciando(JSON.stringify(dataLoad[i]));
+    <script>
+        var seats = document.querySelectorAll('.seat:not(.occupied)');
+        var reserveButton = document.getElementById('reserveButton');
+        let selectedSeat = null;
+        var conteudo = '';
+		
+		// Função chamada ao carregar a página
+        window.onload = async function() {
+            try {
+                const response = await fetch('http://localhost:8080/assento/');
+                const dataLoad = await response.json();
+				for (var i = 0; i < dataLoad.length; i++) {
+					preencherAssentoIniciando(JSON.stringify(dataLoad[i]));
+				}
+            } catch (error) {
+                console.error('Erro ao buscar os assentos:', error);
             }
-        } catch (error) {
-            console.error('Erro ao buscar os assentos:', error);
-        }
-    };
+        };
+		
+		function preencherAssentoIniciando(jsonstr){
+            var json = JSON.parse(jsonstr.toString());
+            console.log(json);
+            conteudo = conteudo + '';
+            document.getElementById('conteudo').innerHTML = '';
 
-    function preencherAssentoIniciando(jsonstr){
-        var json = JSON.parse(jsonstr.toString());
-        console.log(json);
-        conteudo = conteudo + '';
-        document.getElementById('conteudo').innerHTML = '';
+            if(json.reservado) 
+                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.id+'\');" class="seat occupied" id="'+json.id+'">'+ json.nome +'</div>';
+            else
+                conteudo = conteudo + '<div onclick="reservar(\''+json.id+'\');" class="seat selected" id="'+json.id+'">'+ json.nome +'</div>';
+            
+            document.getElementById('conteudo').innerHTML = conteudo;
+		}
 
-        if(json.reservado)
-            conteudo = conteudo + '<div onclick="assentoocupado(\''+json.id+'\');" class="seat occupied" id="'+json.id+'">'+ json.nome +'</div>';
-        else
-            conteudo = conteudo + '<div onclick="reservar(\''+json.id+'\');" class="seat selected" id="'+json.id+'">'+ json.nome +'</div>';
-
-        document.getElementById('conteudo').innerHTML = conteudo;
-    }
-
-    // Evento de clique para seleção de assentos
-    seats.forEach(seat => {
-        seat.addEventListener('click', () => {
-            if (selectedSeat) {
-                selectedSeat.classList.remove('selected');
-            }
-            seat.classList.add('selected');
-            selectedSeat = seat;
-
-            // Habilitar botão de reserva
-            reserveButton.disabled = false;
-        });
-    });
-
-    // Evento de clique no botão de reserva
-    reserveButton.addEventListener('click', () => {
-        if (selectedSeat) {
-            alert(`Assento ${selectedSeat.id} reservado com sucesso!`);
-            selectedSeat.classList.add('occupied');
-            selectedSeat.classList.remove('selected');
-            selectedSeat.removeEventListener('click', null);
-            reserveButton.disabled = true;
-            selectedSeat = null;
-        }
-    });
-
-    function assentoocupado(assento){
-        alert('O Assento '+assento+' está ocupado');
-        reserveButton.disabled = true;
-    }
-
-    function duvidas(){
-        var duvida = '';
-        if(document.getElementById('conteudoDuvida').innerHTML == 'Dúvidas, clique aqui'){
-            duvida = duvida + 'No postman acesse o endpoint: <br> http://localhost:8080/assento/1 <br><br> Envie como PUT um body: <br><br>{  "id": 1,    "nome": "A1F1",    "descricao": "Assento 1 - Fileira 1",    "reservado": true,    "aeronaveId": 1 }';
-            document.getElementById('conteudoDuvida').innerHTML = duvida;
-        } else{
-            document.getElementById('conteudoDuvida').innerHTML = 'Dúvidas, clique aqui';
-        }
-    }
-
-    function reservar(nome){
-        reserveButton.disabled = false;
-    }
-
-    function finalizar(){
-        alert('O assento está livre para reservar.');
-    }
-
-    // ::::::::::: PREENCHIMENTO PÁGINA :::::::::::
-    function preencherpagina(jsonstr){
-        atualizarAssentos(jsonstr);
-    }
-
-    // Criar a conexão com o endpoint do SSE
-    const eventSource = new EventSource('http://localhost:8080/assento/stream');
-
-    // Função para tratar as mensagens recebidas
-    eventSource.onmessage = function(event) {
-        // Atualizar a exibição da página conforme os dados recebidos do SSE
-        preencherpagina(event.data);
-    };
-
-    // Função para tratar erros na conexão SSE
-    eventSource.onerror = function(error) {
-        console.error('Erro SSE:', error);
-        const outputDiv = document.getElementById('conteudo');
-        outputDiv.innerHTML += `<p style="color: red;">Erro na conexão com SSE</p>`;
-    };
-
-
-    // Função que percorre todas as divs e atualiza, cria ou remove conforme necessário
-    function atualizarAssentos(data) {
-        var dataLoad = JSON.parse(data.toString());
-        var assento = dataLoad;
-
-        const conteudoDiv = document.getElementById('conteudo');
-        const assentosAtuais = Array.from(conteudoDiv.children).map(div => div.id);
-        console.log(assentosAtuais)
-        if (!assentosAtuais.includes(assento.id)) {
-            // Se não existe a div, cria uma nova
-            const novoAssentoDiv = document.createElement('div');
-            novoAssentoDiv.id = assento.id;
-            novoAssentoDiv.innerHTML = !assento.reservado
-                ? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`
-                : `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
-            conteudoDiv.appendChild(novoAssentoDiv);
-        } else {
-            // Se a div já existe, atualiza o estado
-            const divExistente = document.getElementById(assento.id);
-            if (!assento.reservado) {
-                divExistente.innerHTML = `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`;
-            } else {
-                divExistente.innerHTML = `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
-            }
-        }
-
-
-        // Remove assentos que não estão mais na lista
-        assentosAtuais.forEach(assentoId => {
-            if (dataLoad.id == assentoId) {
-                const divParaRemover = document.getElementById(assentoId);
-                if (divParaRemover) {
-                    conteudoDiv.removeChild(divParaRemover);
+        // Evento de clique para seleção de assentos
+        seats.forEach(seat => {
+            seat.addEventListener('click', () => {
+                if (selectedSeat) {
+                    selectedSeat.classList.remove('selected');
                 }
+                seat.classList.add('selected');
+                selectedSeat = seat;
+
+                // Habilitar botão de reserva
+                reserveButton.disabled = false;
+            });
+        });
+
+        // Evento de clique no botão de reserva
+        reserveButton.addEventListener('click', () => {
+            if (selectedSeat) {
+                alert(`Assento ${selectedSeat.id} reservado com sucesso!`);
+                selectedSeat.classList.add('occupied');
+                selectedSeat.classList.remove('selected');
+                selectedSeat.removeEventListener('click', null);
+                reserveButton.disabled = true;
+                selectedSeat = null;
             }
         });
-    }
+
+        function assentoocupado(assento){
+            alert('O Assento '+assento+' está ocupado');
+            reserveButton.disabled = true;
+        }
+
+        function reservar(nome){
+            reserveButton.disabled = false;
+        }
+
+        function finalizar(){
+            alert('O assento está livre para reservar.');
+        }
+
+        // ::::::::::: PREENCHIMENTO PÁGINA :::::::::::
+        function preencherpagina(jsonstr){
+			atualizarAssentos(jsonstr);
+        }
+		
+		// Criar a conexão com o endpoint do SSE
+        const eventSource = new EventSource('http://localhost:8080/assento/stream');
+
+        // Função para tratar as mensagens recebidas
+        eventSource.onmessage = function(event) {
+            // Atualizar a exibição da página conforme os dados recebidos do SSE
+			preencherpagina(event.data);
+        };
+
+        // Função para tratar erros na conexão SSE
+        eventSource.onerror = function(error) {
+            console.error('Erro SSE:', error);
+            const outputDiv = document.getElementById('conteudo');
+            outputDiv.innerHTML += `<p style="color: red;">Erro na conexão com SSE</p>`;
+        };
+
+		
+		// Função que percorre todas as divs e atualiza, cria ou remove conforme necessário
+		function atualizarAssentos(data) {
+			var dataLoad = JSON.parse(data.toString());
+			var assento = dataLoad;
+				
+			const conteudoDiv = document.getElementById('conteudo');
+			const assentosAtuais = Array.from(conteudoDiv.children).map(div => div.id);
+			console.log(assentosAtuais)
+			if (!assentosAtuais.includes(assento.id)) {
+				// Se não existe a div, cria uma nova
+				const novoAssentoDiv = document.createElement('div');
+				novoAssentoDiv.id = assento.id;
+				novoAssentoDiv.innerHTML = !assento.reservado
+					? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`
+					: `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
+				conteudoDiv.appendChild(novoAssentoDiv);
+			} else {
+				// Se a div já existe, atualiza o estado
+				const divExistente = document.getElementById(assento.id);
+				if (!assento.reservado) {
+					divExistente.innerHTML = `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`;
+				} else {
+					divExistente.innerHTML = `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
+				}
+			}
+				
+
+			// Remove assentos que não estão mais na lista
+			assentosAtuais.forEach(assentoId => {
+				if (dataLoad.id == assentoId) {
+					const divParaRemover = document.getElementById(assentoId);
+					if (divParaRemover) {
+						conteudoDiv.removeChild(divParaRemover);
+					}
+				}
+			});
+		}
 
 
-</script>
+    </script>
 </body>
 </html>
