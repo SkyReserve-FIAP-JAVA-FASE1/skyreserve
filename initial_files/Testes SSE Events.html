@@ -137,6 +137,34 @@
         var reserveButton = document.getElementById('reserveButton');
         let selectedSeat = null;
         var conteudo = '';
+		
+		// Função chamada ao carregar a página
+        window.onload = async function() {
+            try {
+                const response = await fetch('http://localhost:8080/assento/');
+                const dataLoad = await response.json();
+				for (var i = 0; i < dataLoad.length; i++) {
+					preencherAssento(JSON.stringify(dataLoad[i]));
+				}
+            } catch (error) {
+                console.error('Erro ao buscar os assentos:', error);
+            }
+        };
+		
+		function preencherAssento(jsonstr){
+            console.log(jsonstr);
+            var json = JSON.parse(jsonstr.toString());
+            console.log(json);
+            conteudo = conteudo + '';
+            document.getElementById('conteudo').innerHTML = '';
+
+            if(!json.reservado) 
+                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.nome+'\');" class="seat occupied" id="'+json.nome+'">'+ json.nome +'</div>';
+            else
+                conteudo = conteudo + '<div onclick="reservar(\''+json.nome+'\');" class="seat selected" id="'+json.nome+'">'+ json.nome +'</div>';
+            
+            document.getElementById('conteudo').innerHTML = conteudo;
+		}
 
         // Evento de clique para seleção de assentos
         seats.forEach(seat => {
@@ -189,17 +217,7 @@
 
         // ::::::::::: PREENCHIMENTO PÁGINA :::::::::::
         function preencherpagina(jsonstr){
-            var json = JSON.parse(jsonstr.toString());
-            console.log(json);
-            conteudo = conteudo + '';
-            document.getElementById('conteudo').innerHTML = '';
-
-            if(!json.reservado) 
-                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.nome+'\');" class="seat occupied" id="'+json.nome+'">'+ json.nome +'</div>';
-            else
-                conteudo = conteudo + '<div onclick="reservar(\''+json.nome+'\');" class="seat selected" id="'+json.nome+'">'+ json.nome +'</div>';
-            
-            document.getElementById('conteudo').innerHTML = conteudo;
+            preencherAssento(jsonstr);
         }
 
         // Criar a conexão com o endpoint do SSE
