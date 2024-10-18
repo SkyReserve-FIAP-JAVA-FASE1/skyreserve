@@ -74,6 +74,18 @@ public class PostgreSQLInitDatabase {
                 .fetch().rowsUpdated().block();
 
 
+        // TABLE REEMBOLSO
+        databaseClient.sql("CREATE TABLE IF NOT EXISTS reembolso (\n" +
+                        "    id BIGSERIAL PRIMARY KEY,\n" +
+                        "    valor_restituicao NUMERIC(15, 2) NOT NULL,\n" +
+                        "    reembolso_efetuado BOOLEAN DEFAULT FALSE,\n" +
+                        "    data_solicitacao TIMESTAMP NOT NULL,\n" +
+                        "    data_reembolso TIMESTAMP,\n" +
+                        "    reserva_id BIGINT NOT NULL\n" +
+                        ");")
+                .fetch().rowsUpdated().block();
+
+
         // TABLE RESERVA
         databaseClient.sql("CREATE TABLE IF NOT EXISTS reserva (\n" +
                         "    id BIGSERIAL PRIMARY KEY,\n" +
@@ -81,6 +93,7 @@ public class PostgreSQLInitDatabase {
                         "    voo_id BIGINT NOT NULL,\n" +
                         "    assento_id BIGINT NOT NULL,\n" +
                         "    pagamento_id BIGINT NOT NULL,\n" +
+                        "    reembolso_id BIGINT,\n" +
                         "    data_da_reserva TIMESTAMP NOT NULL,\n" +
                         "    bagagem BOOLEAN DEFAULT FALSE,\n" +
                         "    tipo_voo VARCHAR(50) NOT NULL,\n" +
@@ -89,7 +102,8 @@ public class PostgreSQLInitDatabase {
                         "    CONSTRAINT fk_passageiro FOREIGN KEY (passageiro_id) REFERENCES passageiro(id),\n" +
                         "    CONSTRAINT fk_voo FOREIGN KEY (voo_id) REFERENCES voo(id),\n" +
                         "    CONSTRAINT fk_assento FOREIGN KEY (assento_id) REFERENCES assento(id),\n" +
-                        "    CONSTRAINT fk_pagamento FOREIGN KEY (pagamento_id) REFERENCES pagamento(id)\n" +
+                        "    CONSTRAINT fk_pagamento FOREIGN KEY (pagamento_id) REFERENCES pagamento(id),\n" +
+                        "    CONSTRAINT fk_reembolso FOREIGN KEY (reembolso_id) REFERENCES reembolso(id)\n" +
                         ");")
                 .fetch().rowsUpdated().block();
 
@@ -99,10 +113,24 @@ public class PostgreSQLInitDatabase {
                         "    IF NOT EXISTS (\n" +
                         "        SELECT 1\n" +
                         "        FROM pg_constraint\n" +
-                        "        WHERE conname = 'fk_reservaid'\n" +
+                        "        WHERE conname = 'fk_pagamento_reserva_id'\n" +
                         "    ) THEN\n" +
                         "        ALTER TABLE pagamento\n" +
-                        "        ADD CONSTRAINT fk_reservaId FOREIGN KEY (reserva_id) REFERENCES reserva(id);\n" +
+                        "        ADD CONSTRAINT fk_pagamento_reserva_id FOREIGN KEY (reserva_id) REFERENCES reserva(id);\n" +
+                        "    END IF;\n" +
+                        "END $$;")
+                .fetch().rowsUpdated().block();
+
+        // FK REEMBOLSO -> RESERVA_ID
+        databaseClient.sql("DO $$\n" +
+                        "BEGIN\n" +
+                        "    IF NOT EXISTS (\n" +
+                        "        SELECT 1\n" +
+                        "        FROM pg_constraint\n" +
+                        "        WHERE conname = 'fk_reembolso_reserva_id'\n" +
+                        "    ) THEN\n" +
+                        "        ALTER TABLE reembolso\n" +
+                        "        ADD CONSTRAINT fk_reembolso_reserva_id FOREIGN KEY (reserva_id) REFERENCES reserva(id);\n" +
                         "    END IF;\n" +
                         "END $$;")
                 .fetch().rowsUpdated().block();

@@ -90,6 +90,11 @@ public class DBServiceLocal {
                                 "VALUES(nextval('reserva_id_seq'::regclass), 1, 1, 1, 1, TO_DATE('10/07/2024','dd/MM/YYYY'), false, 'IDA_E_VOLTA', 589.45);")
                         .fetch().rowsUpdated().block();
 
+                // INSERÇÃO DO REEMBOLSO
+                databaseClient.sql("INSERT INTO public.reembolso\n" +
+                                "(id, data_solicitacao, data_reembolso, valor_restituicao, reembolso_efetuado, reserva_id)\n" +
+                                "VALUES(nextval('reembolso_id_seq'::regclass), TO_DATE('10/07/2024','dd/MM/YYYY'), TO_DATE('10/07/2024','dd/MM/YYYY'), 589.45, true, 1);")
+                        .fetch().rowsUpdated().block();
             }
 
         }

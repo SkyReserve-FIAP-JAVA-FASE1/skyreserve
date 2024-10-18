@@ -41,7 +41,7 @@ public class ReservaService {
         return repository.findById(id)
                 .flatMap(entity -> {
                     entity.setId(id);
-
+                    entity.setReembolsoId(objDTO.getReembolsoId());
                     entity.setPassageiroId(objDTO.getPassageiroId());
                     entity.setVooId(objDTO.getVooId());
                     entity.setAssentoId(objDTO.getAssentoId());
