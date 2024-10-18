@@ -6,6 +6,8 @@ import org.skyreserve.domain.entity.AssentoEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
 import org.skyreserve.infra.repository.postgres.AssentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.ReactiveValueOperations;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.FluxSink;
@@ -22,6 +24,27 @@ public class AssentoService {
     private AssentoRepository repository;
 
     private final List<FluxSink<AssentoEntity>> subscribers = new ArrayList<>();
+    private static final String ASSENTO_PREFIX = "assento:";  // Prefixo para as chaves dos assentos
+    private final ReactiveValueOperations<String, Boolean> valueOperations;
+
+    public AssentoService(ReactiveRedisTemplate<String, Boolean> redisTemplate) {
+        this.valueOperations = redisTemplate.opsForValue();
+    }
+
+    public Mono<Boolean> bloquearAssento(String assentoId) {
+        String key = ASSENTO_PREFIX + assentoId;
+        return valueOperations.set(key, true);
+    }
+
+    public Mono<Boolean> desbloquearAssento(String assentoId) {
+        String key = ASSENTO_PREFIX + assentoId;
+        return valueOperations.delete(key).map(result -> result != null && result);
+    }
+
+    public Mono<Boolean> isAssentoDesbloqueado(String assentoId) {
+        String key = ASSENTO_PREFIX + assentoId;
+        return valueOperations.get(key).defaultIfEmpty(false).map(isBlocked -> !isBlocked);
+    }
 
     public Mono<AssentoEntity> findById(Long id) {
         return repository.findById(id)

@@ -61,6 +61,17 @@ services:
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
 
+  redis:
+    image: redis:6.2
+    container_name: redis
+    networks:
+      - broker-kafka
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    command: [ "redis-server", "--appendonly", "yes" ]
+
 networks:
   broker-kafka:
     driver: bridge

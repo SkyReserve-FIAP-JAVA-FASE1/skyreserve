@@ -56,5 +56,18 @@ public class AssentoController {
         return service.deleteById(id);
     }
 
+    @PostMapping("/bloquear/{id}")
+    public Mono<Boolean> bloquearAssento(@PathVariable String id) {
+        return service.bloquearAssento(id);
+    }
 
+    @PostMapping("/desbloquear/{id}")
+    public Mono<Boolean> desbloquearAssento(@PathVariable String id) {
+        return service.desbloquearAssento(id);
+    }
+
+    @GetMapping("/estado/{id}")
+    public Mono<Boolean> isAssentoDesbloqueado(@PathVariable String id) {
+        return service.isAssentoDesbloqueado(id);
+    }
 }

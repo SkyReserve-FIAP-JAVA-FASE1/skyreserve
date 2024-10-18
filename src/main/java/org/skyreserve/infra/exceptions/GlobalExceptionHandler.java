@@ -18,5 +18,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(AssentoIsReservedException.class)
+    public ResponseEntity<ErrorResponse> handleAssentoIsReservedException(AssentoIsReservedException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                e.getMessage(),
+                "O assento já está reservado no sistema.",
+                HttpStatus.NOT_FOUND.value()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+
+
 
 }
