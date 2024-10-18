@@ -144,24 +144,23 @@
                 const response = await fetch('http://localhost:8080/assento/');
                 const dataLoad = await response.json();
 				for (var i = 0; i < dataLoad.length; i++) {
-					preencherAssento(JSON.stringify(dataLoad[i]));
+					preencherAssentoIniciando(JSON.stringify(dataLoad[i]));
 				}
             } catch (error) {
                 console.error('Erro ao buscar os assentos:', error);
             }
         };
 		
-		function preencherAssento(jsonstr){
-            console.log(jsonstr);
+		function preencherAssentoIniciando(jsonstr){
             var json = JSON.parse(jsonstr.toString());
             console.log(json);
             conteudo = conteudo + '';
             document.getElementById('conteudo').innerHTML = '';
 
             if(!json.reservado) 
-                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.nome+'\');" class="seat occupied" id="'+json.nome+'">'+ json.nome +'</div>';
+                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.id+'\');" class="seat occupied" id="'+json.id+'">'+ json.nome +'</div>';
             else
-                conteudo = conteudo + '<div onclick="reservar(\''+json.nome+'\');" class="seat selected" id="'+json.nome+'">'+ json.nome +'</div>';
+                conteudo = conteudo + '<div onclick="reservar(\''+json.id+'\');" class="seat selected" id="'+json.id+'">'+ json.nome +'</div>';
             
             document.getElementById('conteudo').innerHTML = conteudo;
 		}
@@ -217,18 +216,16 @@
 
         // ::::::::::: PREENCHIMENTO PÁGINA :::::::::::
         function preencherpagina(jsonstr){
-            preencherAssento(jsonstr);
+			atualizarAssentos(jsonstr);
         }
-
-        // Criar a conexão com o endpoint do SSE
+		
+		// Criar a conexão com o endpoint do SSE
         const eventSource = new EventSource('http://localhost:8080/assento/stream');
 
         // Função para tratar as mensagens recebidas
         eventSource.onmessage = function(event) {
-            console.log('Evento SSE recebido:', event.data);
-
             // Atualizar a exibição da página conforme os dados recebidos do SSE
-            preencherpagina(event.data);
+			preencherpagina(event.data);
         };
 
         // Função para tratar erros na conexão SSE
@@ -237,6 +234,47 @@
             const outputDiv = document.getElementById('conteudo');
             outputDiv.innerHTML += `<p style="color: red;">Erro na conexão com SSE</p>`;
         };
+
+		
+		// Função que percorre todas as divs e atualiza, cria ou remove conforme necessário
+		function atualizarAssentos(data) {
+			var dataLoad = JSON.parse(data.toString());
+			var assento = dataLoad;
+				
+			const conteudoDiv = document.getElementById('conteudo');
+			const assentosAtuais = Array.from(conteudoDiv.children).map(div => div.id);
+			console.log(assentosAtuais)
+			if (!assentosAtuais.includes(assento.id)) {
+				// Se não existe a div, cria uma nova
+				const novoAssentoDiv = document.createElement('div');
+				novoAssentoDiv.id = assento.id;
+				novoAssentoDiv.innerHTML = assento.reservado
+					? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`
+					: `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
+				conteudoDiv.appendChild(novoAssentoDiv);
+			} else {
+				// Se a div já existe, atualiza o estado
+				const divExistente = document.getElementById(assento.id);
+				if (assento.reservado) {
+					divExistente.innerHTML = `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`;
+				} else {
+					divExistente.innerHTML = `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
+				}
+			}
+				
+
+			// Remove assentos que não estão mais na lista
+			assentosAtuais.forEach(assentoId => {
+				if (dataLoad.id == assentoId) {
+					const divParaRemover = document.getElementById(assentoId);
+					if (divParaRemover) {
+						conteudoDiv.removeChild(divParaRemover);
+					}
+				}
+			});
+		}
+
+
     </script>
 </body>
 </html>
