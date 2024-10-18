@@ -139,6 +139,39 @@
 					"response": []
 				},
 				{
+					"name": "Busca por CPF",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/passageiro/cpf/22245678901",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"passageiro",
+								"cpf",
+								"22245678901"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Save",
 					"request": {
 						"method": "POST",
@@ -335,7 +368,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"A1\",\r\n    \"descricao\": \"Fileira A - Assento 1\",\r\n    \"reservado\": false,\r\n    \"aeronaveId\": 1\r\n}",
+							"raw": "{\r\n    \"nome\": \"F1A4\",\r\n    \"descricao\": \"Fileira 1 - Assento 4\",\r\n    \"reservado\": false,\r\n    \"aeronaveId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -364,7 +397,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"nome\": \"A1F1\",\r\n    \"descricao\": \"Assento 1 - Fileira 1\",\r\n    \"reservado\": true,\r\n    \"aeronaveId\": 1\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nome\": \"F1A1\",\r\n    \"descricao\": \"Fileira 1 - Assento 1\",\r\n    \"reservado\": true,\r\n    \"aeronaveId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
