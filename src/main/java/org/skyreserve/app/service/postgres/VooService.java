@@ -5,11 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.VooDTO;
 import org.skyreserve.domain.entity.VooEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
+import org.skyreserve.infra.repository.postgres.VooCustomRepository;
 import org.skyreserve.infra.repository.postgres.VooRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.LocalDateTime;
 
 @Service
 @Slf4j
@@ -18,6 +21,9 @@ public class VooService {
     @Autowired
     private VooRepository repository;
 
+    @Autowired
+    private VooCustomRepository repositoryCustom;
+
     public Mono<VooEntity> findById(Long id) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Voo não encontrado com id: " + id)));
@@ -25,6 +31,10 @@ public class VooService {
 
     public Flux<VooEntity> findAll() {
         return repository.findAll();
+    }
+
+    public Flux<VooEntity> findByVooParamters(String origem, String destino, LocalDateTime dataHoraPartidaMin, LocalDateTime dataHoraPartidaMax, int page, int size, String orderBy, String direction) {
+        return repositoryCustom.findByVooParamters(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, page, size, orderBy, direction);
     }
 
     public Mono<Void> deleteById(Long id) {
