@@ -24,6 +24,7 @@ public class ReservaDTO {
     private boolean bagagem = false;
     private TipoVooEnum tipoVoo;
     private BigDecimal valorReserva;
+    private Long reembolsoId;
 
     public ReservaDTO(ReservaEntity entity) {
         if (entity != null) {
@@ -36,6 +37,7 @@ public class ReservaDTO {
             this.bagagem = entity.isBagagem();
             this.tipoVoo = entity.getTipoVoo();
             this.valorReserva = entity.getValorReserva();
+            this.reembolsoId = entity.getReembolsoId();
         }
     }
 
@@ -50,6 +52,7 @@ public class ReservaDTO {
                 ", dataDaReserva=" + dataDaReserva +
                 ", bagagem=" + bagagem +
                 ", tipoVoo=" + tipoVoo +
+                ", reembolsoId=" + reembolsoId +
                 ", valorReserva=" + valorReserva +
                 '}';
     }

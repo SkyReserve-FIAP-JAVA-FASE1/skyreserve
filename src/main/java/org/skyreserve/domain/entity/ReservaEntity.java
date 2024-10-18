@@ -29,6 +29,7 @@ public class ReservaEntity implements Serializable {
     private boolean bagagem = false;
     private TipoVooEnum tipoVoo;
     private BigDecimal valorReserva;
+    private Long reembolsoId;
 
     public ReservaEntity(ReservaDTO dto) {
         if(dto != null){
@@ -41,6 +42,7 @@ public class ReservaEntity implements Serializable {
             this.bagagem = dto.isBagagem();
             this.tipoVoo = dto.getTipoVoo();
             this.valorReserva = dto.getValorReserva();
+            this.reembolsoId = dto.getReembolsoId();
         }
     }
 
