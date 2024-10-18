@@ -139,11 +139,12 @@
         var reserveButton = document.getElementById('reserveButton');
         let selectedSeat = null;
         var conteudo = '';
-		
+		const aeronaveId = 1;
+        
 		// Função chamada ao carregar a página
         window.onload = async function() {
             try {
-                const response = await fetch('http://localhost:8080/assento/');
+                const response = await fetch('http://localhost:8080/assento/aeronave/' + aeronaveId);
                 const dataLoad = await response.json();
 				for (var i = 0; i < dataLoad.length; i++) {
 					preencherAssentoIniciando(JSON.stringify(dataLoad[i]));
@@ -212,7 +213,7 @@
         }
 		
 		// Criar a conexão com o endpoint do SSE
-        const eventSource = new EventSource('http://localhost:8080/assento/stream');
+		const eventSource = new EventSource('http://localhost:8080/assento/stream/' + aeronaveId);
 
         // Função para tratar as mensagens recebidas
         eventSource.onmessage = function(event) {

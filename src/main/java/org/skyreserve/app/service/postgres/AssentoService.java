@@ -28,6 +28,10 @@ public class AssentoService {
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Assento não encontrado com id: " + id)));
     }
 
+    public Flux<AssentoEntity> findAllByAeronaveId(Long aeronaveId) {
+        return repository.findAllByAeronaveId(aeronaveId);
+    }
+
     public Flux<AssentoEntity> findAllByOrderByIdAsc() {
         return repository.findAllByOrderByIdAsc();
     }
