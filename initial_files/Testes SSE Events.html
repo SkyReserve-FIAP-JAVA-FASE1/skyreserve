@@ -51,16 +51,16 @@
 		}
 
         .seat.selected {
-            background-color: #6feaf6;
+            background-color: #67c667;
         }
 
         .seat.occupied {
-            background-color: #444451;
+            background-color: #e57c7c;
             cursor: not-allowed;
         }
 
         .seat:hover:not(.occupied) {
-            background-color: #76b5c5;
+            background-color: green;
         }
 
         .legend {
@@ -157,7 +157,7 @@
             conteudo = conteudo + '';
             document.getElementById('conteudo').innerHTML = '';
 
-            if(!json.reservado) 
+            if(json.reservado) 
                 conteudo = conteudo + '<div onclick="assentoocupado(\''+json.id+'\');" class="seat occupied" id="'+json.id+'">'+ json.nome +'</div>';
             else
                 conteudo = conteudo + '<div onclick="reservar(\''+json.id+'\');" class="seat selected" id="'+json.id+'">'+ json.nome +'</div>';
@@ -248,14 +248,14 @@
 				// Se não existe a div, cria uma nova
 				const novoAssentoDiv = document.createElement('div');
 				novoAssentoDiv.id = assento.id;
-				novoAssentoDiv.innerHTML = assento.reservado
+				novoAssentoDiv.innerHTML = !assento.reservado
 					? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`
 					: `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
 				conteudoDiv.appendChild(novoAssentoDiv);
 			} else {
 				// Se a div já existe, atualiza o estado
 				const divExistente = document.getElementById(assento.id);
-				if (assento.reservado) {
+				if (!assento.reservado) {
 					divExistente.innerHTML = `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nome}</div>`;
 				} else {
 					divExistente.innerHTML = `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nome}</div>`;
