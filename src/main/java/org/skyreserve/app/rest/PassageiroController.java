@@ -27,6 +27,11 @@ public class PassageiroController {
         return service.findById(id);
     }
 
+    @GetMapping("/cpf/{cpf}")
+    public Mono<PassageiroEntity> findByCpf(@PathVariable String cpf) {
+        return service.findByCpf(cpf);
+    }
+
     @GetMapping
     public Flux<PassageiroEntity> findAll() {
         return service.findAll();

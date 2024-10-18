@@ -17,6 +17,11 @@ public class PassageiroService {
     @Autowired
     private PassageiroRepository repository;
 
+    public Mono<PassageiroEntity> findByCpf(String cpf) {
+        return repository.findByCpf(cpf)
+                .switchIfEmpty(Mono.error(new ObjectNotFoundException("Passageiro não encontrado com CPF: " + cpf)));
+    }
+
     public Mono<PassageiroEntity> findById(Long id) {
         return repository.findById(id)
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Passageiro não encontrado com id: " + id)));
