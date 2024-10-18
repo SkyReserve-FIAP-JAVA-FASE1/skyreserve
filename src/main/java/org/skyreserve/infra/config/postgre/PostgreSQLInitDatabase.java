@@ -104,7 +104,7 @@ public class PostgreSQLInitDatabase {
                         "    passageiro_id BIGINT NOT NULL,\n" +
                         "    voo_id BIGINT NOT NULL,\n" +
                         "    assento_id BIGINT NOT NULL,\n" +
-                        "    pagamento_id BIGINT NOT NULL,\n" +
+                        "    pagamento_id BIGINT,\n" +
                         "    reembolso_id BIGINT,\n" +
                         "    data_da_reserva TIMESTAMP NOT NULL,\n" +
                         "    bagagem BOOLEAN DEFAULT FALSE,\n" +

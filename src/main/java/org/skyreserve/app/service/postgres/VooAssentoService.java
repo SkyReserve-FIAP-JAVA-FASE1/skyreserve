@@ -104,4 +104,8 @@ public class VooAssentoService {
     }
 
 
+    public Mono<VooAssentoEntity> buscarVooAssentoPorAeronave(Long vooId) {
+        return repository.findAllByVooIdOrderByNomeAssentoAsc(vooId)
+                .switchIfEmpty(Mono.error(new ObjectNotFoundException("Voo Assento não encontrado com vooId: " + vooId)));
+    }
 }

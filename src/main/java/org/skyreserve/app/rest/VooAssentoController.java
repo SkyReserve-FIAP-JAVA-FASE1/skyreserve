@@ -24,6 +24,11 @@ public class VooAssentoController {
         return service.findById(id);
     }
 
+    @GetMapping("/voo/{vooId}")
+    public Mono<VooAssentoEntity> buscarVooAssentoPorVooId(@PathVariable Long vooId) {
+        return service.buscarVooAssentoPorAeronave(vooId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<VooAssentoEntity> save(@RequestBody VooAssentoEntity vooAssentoEntity) {

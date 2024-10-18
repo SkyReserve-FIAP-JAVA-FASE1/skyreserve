@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS reserva (
                     passageiro_id BIGINT NOT NULL,
                     voo_id BIGINT NOT NULL,
                     assento_id BIGINT NOT NULL,
-                    pagamento_id BIGINT NOT NULL,
+                    pagamento_id BIGINT,
                     reembolso_id BIGINT,
                     data_da_reserva TIMESTAMP NOT NULL,
                     bagagem BOOLEAN DEFAULT FALSE,
