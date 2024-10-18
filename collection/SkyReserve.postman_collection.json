@@ -705,6 +705,35 @@
 					"response": []
 				},
 				{
+					"name": "Atualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"dataPagamento\": \"2024-10-30T23:50:10\",\r\n        \"valorTotal\": 587.65,\r\n        \"statusPagamento\": \"PENDENTE_PAGAMENTO\",\r\n        \"reservaId\": 1\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/pagamento/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pagamento",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete",
 					"request": {
 						"method": "DELETE",
@@ -727,6 +756,133 @@
 							"port": "8080",
 							"path": [
 								"pagamento",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reembolso",
+			"item": [
+				{
+					"name": "FindAll",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/reembolso/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reembolso",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Busca por ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/reembolso/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reembolso",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"valorRestituicao\": 485.25,\r\n    \"reembolsoEfetuado\": true,\r\n    \"dataSolicitacao\": \"2024-10-30T23:50:10\",\r\n    \"dataReembolso\": \"2024-10-30T23:50:10\",\r\n    \"reservaId\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/reembolso/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reembolso",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/reembolso/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reembolso",
 								"1"
 							]
 						}
@@ -809,7 +965,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.75\r\n}\r\n",
+							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 3,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.75,\r\n    \"reembolsoId\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -826,6 +982,35 @@
 							"path": [
 								"reserva",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.75,\r\n    \"reembolsoId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/reserva/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reserva",
+								"1"
 							]
 						}
 					},
