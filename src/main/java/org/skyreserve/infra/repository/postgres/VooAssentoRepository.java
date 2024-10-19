@@ -7,5 +7,5 @@ import reactor.core.publisher.Mono;
 
 public interface VooAssentoRepository extends ReactiveCrudRepository<VooAssentoEntity, Long> {
     Flux<VooAssentoEntity> findAllByOrderByIdAsc();
-    Mono<VooAssentoEntity> findAllByVooIdOrderByNomeAssentoAsc(Long vooId);
+    Flux<VooAssentoEntity> findAllByVooIdOrderByNomeAssentoAsc(Long vooId);
 }

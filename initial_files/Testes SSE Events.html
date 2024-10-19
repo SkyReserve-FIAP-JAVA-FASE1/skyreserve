@@ -139,12 +139,12 @@
         var reserveButton = document.getElementById('reserveButton');
         let selectedSeat = null;
         var conteudo = '';
-		const aeronaveId = 1;
+		const vooId = 1;
         
 		// Função chamada ao carregar a página
         window.onload = async function() {
             try {
-                const response = await fetch('http://localhost:8080/assento/aeronave/' + aeronaveId);
+                const response = await fetch('http://localhost:8080/vooassento/voo/' + vooId);
                 const dataLoad = await response.json();
 				for (var i = 0; i < dataLoad.length; i++) {
 					preencherAssentoIniciando(JSON.stringify(dataLoad[i]));
@@ -161,9 +161,9 @@
             document.getElementById('conteudo').innerHTML = '';
 
             if(json.reservado) 
-                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.id+'\');" class="seat occupied" id="'+json.id+'">'+ json.nome +'</div>';
+                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.id+'\');" class="seat occupied" id="'+json.id+'">'+ json.nomeAssento +'</div>';
             else
-                conteudo = conteudo + '<div onclick="reservar(\''+json.id+'\');" class="seat selected" id="'+json.id+'">'+ json.nome +'</div>';
+                conteudo = conteudo + '<div onclick="reservar(\''+json.id+'\');" class="seat selected" id="'+json.id+'">'+ json.nomeAssento +'</div>';
             
             document.getElementById('conteudo').innerHTML = conteudo;
 		}
@@ -213,7 +213,7 @@
         }
 		
 		// Criar a conexão com o endpoint do SSE
-		const eventSource = new EventSource('http://localhost:8080/vooassento/stream/' + aeronaveId);
+		const eventSource = new EventSource('http://localhost:8080/vooassento/stream/' + vooId);
 
         // Função para tratar as mensagens recebidas
         eventSource.onmessage = function(event) {

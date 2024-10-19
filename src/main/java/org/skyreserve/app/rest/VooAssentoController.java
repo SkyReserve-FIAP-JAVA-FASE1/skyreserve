@@ -25,7 +25,7 @@ public class VooAssentoController {
     }
 
     @GetMapping("/voo/{vooId}")
-    public Mono<VooAssentoEntity> buscarVooAssentoPorVooId(@PathVariable Long vooId) {
+    public Flux<VooAssentoEntity> buscarVooAssentoPorVooId(@PathVariable Long vooId) {
         return service.buscarVooAssentoPorAeronave(vooId);
     }
 
