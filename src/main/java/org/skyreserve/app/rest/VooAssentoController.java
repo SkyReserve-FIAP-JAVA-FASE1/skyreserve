@@ -58,7 +58,14 @@ public class VooAssentoController {
 
     @PostMapping("/bloquear/{id}")
     public Mono<Boolean> bloquearAssento(@PathVariable String id) {
-        return service.bloquearAssento(id);
+        return service.isAssentoDesbloqueado(id)
+            .flatMap(isDesbloqueado -> {
+                if (isDesbloqueado) {
+                    return service.bloquearAssento(id);
+                } else {
+                    return Mono.just(false);
+                }
+            });
     }
 
     @PostMapping("/desbloquear/{id}")

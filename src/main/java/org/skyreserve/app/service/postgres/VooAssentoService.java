@@ -25,7 +25,7 @@ public class VooAssentoService {
     private VooAssentoRepository repository;
 
     private final List<FluxSink<VooAssentoEntity>> subscribers = new ArrayList<>();
-    private static final String ASSENTO_PREFIX = "assento:";  // Prefixo para as chaves dos assentos
+    private static final String ASSENTO_PREFIX = "voo_assento:";  // Prefixo para as chaves dos assentos
     private final ReactiveValueOperations<String, Boolean> valueOperations;
 
     public VooAssentoService(ReactiveRedisTemplate<String, Boolean> redisTemplate) {
