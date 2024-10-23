@@ -2,6 +2,7 @@
 package org.skyreserve.app.service.postgres;
 
 import lombok.extern.slf4j.Slf4j;
+import org.skyreserve.domain.dto.PaginatedResponse;
 import org.skyreserve.domain.dto.VooDTO;
 import org.skyreserve.domain.entity.VooEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -33,8 +35,18 @@ public class VooService {
         return repository.findAll();
     }
 
-    public Flux<VooEntity> findByVooParamters(String origem, String destino, LocalDateTime dataHoraPartidaMin, LocalDateTime dataHoraPartidaMax, int page, int size, String orderBy, String direction) {
-        return repositoryCustom.findByVooParamters(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, page, size, orderBy, direction);
+    public Mono<PaginatedResponse<VooEntity>> findByVooParamters(String origem, String destino, LocalDateTime dataHoraPartidaMin, LocalDateTime dataHoraPartidaMax, int page, int size, String orderBy, String direction) {
+        return repositoryCustom.findByVooParamters(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, page, size, orderBy, direction)
+                .collectList()
+                .zipWith(repository.count())
+                .map(tuple -> {
+                    List<VooEntity> content = tuple.getT1();
+                    long totalElements = tuple.getT2();
+                    int totalPages = (int) Math.ceil((double) totalElements / size);
+                    return new PaginatedResponse<>(content, totalPages, totalElements, page);
+                });
+
+        //return repositoryCustom.findByVooParamters(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, page, size, orderBy, direction);
     }
 
     public Mono<Void> deleteById(Long id) {

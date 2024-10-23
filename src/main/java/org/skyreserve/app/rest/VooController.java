@@ -2,6 +2,7 @@ package org.skyreserve.app.rest;
 
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.postgres.VooService;
+import org.skyreserve.domain.dto.PaginatedResponse;
 import org.skyreserve.domain.dto.VooDTO;
 import org.skyreserve.domain.entity.VooEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class VooController {
     }
 
     @GetMapping("/search")
-    public Flux<VooEntity> search(
+    public Mono<PaginatedResponse<VooEntity>> search(
             @RequestParam String origem,
             @RequestParam String destino,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataHoraPartidaMin,
