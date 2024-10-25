@@ -5,6 +5,8 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import reactor.kafka.receiver.KafkaReceiver;
+import reactor.kafka.receiver.ReceiverOptions;
 import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
 
@@ -26,5 +28,11 @@ public class KafkaConfig {
         SenderOptions<String, String> senderOptions = SenderOptions.create(producerProps);
         return KafkaSender.create(senderOptions);
     }
+
+    @Bean
+    public KafkaReceiver<String, String> kafkaReceiver(ReceiverOptions<String, String> receiverOptions) {
+        return KafkaReceiver.create(receiverOptions);
+    }
+
 
 }

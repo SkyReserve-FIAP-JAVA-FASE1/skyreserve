@@ -44,7 +44,7 @@ public class ReservaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<ReservaEntity> save(@RequestBody ReservaEntity reservaEntity) {
-        return vooAssentoService.isAssentoDesbloqueado(reservaEntity.getAssentoId().toString())
+        return vooAssentoService.isAssentoDesbloqueadoRedis(reservaEntity.getAssentoId())
                 .flatMap(isDesbloqueado -> {
                     if (isDesbloqueado) {
                         return service.save(new ReservaDTO(reservaEntity));

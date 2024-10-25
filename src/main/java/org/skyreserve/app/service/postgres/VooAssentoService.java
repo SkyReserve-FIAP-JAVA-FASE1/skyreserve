@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.VooAssentoDTO;
 import org.skyreserve.domain.entity.VooAssentoEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
+import org.skyreserve.infra.repository.postgres.VooAssentoCustomRepository;
 import org.skyreserve.infra.repository.postgres.VooAssentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -23,6 +24,9 @@ public class VooAssentoService {
 
     @Autowired
     private VooAssentoRepository repository;
+
+    @Autowired
+    private VooAssentoCustomRepository vooAssentoCustomRepository;
 
     private final List<FluxSink<VooAssentoEntity>> subscribers = new ArrayList<>();
     private static final String ASSENTO_PREFIX = "voo_assento:";  // Prefixo para as chaves dos assentos
@@ -88,19 +92,27 @@ public class VooAssentoService {
     }
 
 
-    public Mono<Boolean> bloquearAssento(String assentoId) {
-        String key = ASSENTO_PREFIX + assentoId;
+    public Mono<Boolean> bloquearAssentoRedis(Long vooAssentoId) {
+        String key = ASSENTO_PREFIX + vooAssentoId;
         return valueOperations.set(key, true);
     }
 
-    public Mono<Boolean> desbloquearAssento(String assentoId) {
+    public Mono<Boolean> desbloquearAssentoRedis(Long assentoId) {
         String key = ASSENTO_PREFIX + assentoId;
         return valueOperations.delete(key).map(result -> result != null && result);
     }
 
-    public Mono<Boolean> isAssentoDesbloqueado(String assentoId) {
-        String key = ASSENTO_PREFIX + assentoId;
+    public Mono<Boolean> isAssentoDesbloqueadoRedis(long vooAssentoId) {
+        String key = ASSENTO_PREFIX + vooAssentoId;
         return valueOperations.get(key).defaultIfEmpty(false).map(isBlocked -> !isBlocked);
+    }
+
+    public Mono<Void> bloquearAssentoBanco(long assentoId) {
+        return vooAssentoCustomRepository.bloquearAssento(assentoId);
+    }
+
+    public Mono<Void> desbloquearAssentoBanco(long assentoId) {
+        return vooAssentoCustomRepository.desbloquearAssento(assentoId);
     }
 
 

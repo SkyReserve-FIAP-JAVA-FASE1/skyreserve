@@ -57,25 +57,47 @@ public class VooAssentoController {
     }
 
     @PostMapping("/bloquear/{id}")
-    public Mono<Boolean> bloquearAssento(@PathVariable String id) {
-        return service.isAssentoDesbloqueado(id)
+    public Mono<Boolean> bloquearAssento(@PathVariable Long id) {
+        return service.isAssentoDesbloqueadoRedis(id)
             .flatMap(isDesbloqueado -> {
                 if (isDesbloqueado) {
-                    return service.bloquearAssento(id);
+                    return service.bloquearAssentoRedis(id)
+                        .flatMap(status ->
+                            service.findById(id)
+                                .flatMap(vooAssento -> {
+                                    vooAssento.setReservado(true);
+                                    return service.save(new VooAssentoDTO(vooAssento))
+                                           .doOnSuccess(atualizarEvent -> service.notifyListAssentoChanged());
+                                })
+                                .thenReturn(true)
+                        );
                 } else {
                     return Mono.just(false);
                 }
             });
     }
 
+
     @PostMapping("/desbloquear/{id}")
-    public Mono<Boolean> desbloquearAssento(@PathVariable String id) {
-        return service.desbloquearAssento(id);
+    public Mono<Boolean> desbloquearAssento(@PathVariable Long id) {
+        return service.desbloquearAssentoRedis(id)
+            .flatMap(desbloqueado -> {
+                return service.desbloquearAssentoRedis(id)
+                        .flatMap(status ->
+                        service.findById(id)
+                            .flatMap(vooAssento -> {
+                                vooAssento.setReservado(false);
+                                return service.save(new VooAssentoDTO(vooAssento))
+                                       .doOnSuccess(atualizarEvent -> service.notifyListAssentoChanged());
+                            })
+                            .thenReturn(false)
+                    );
+            });
     }
 
     @GetMapping("/estado/{id}")
-    public Mono<Boolean> isAssentoDesbloqueado(@PathVariable String id) {
-        return service.isAssentoDesbloqueado(id);
+    public Mono<Boolean> isAssentoDesbloqueado(@PathVariable Long id) {
+        return service.isAssentoDesbloqueadoRedis(id);
     }
 
     @GetMapping(value = "/stream/{vooid}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -83,8 +105,6 @@ public class VooAssentoController {
         return service.getAssentosAtualizados().filter(vooAssentoEntity ->
                 vooAssentoEntity.getVooId().equals(vooid));
     }
-
-
 
 
 }
