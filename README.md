@@ -8,7 +8,7 @@
 - As variáveis de ambiente estão na pasta env.
 - Ao iniciar a aplicação, não se esqueça de verificar se existe o tópico (teste) no KafkaDrop: http://localhost:9000
 - Obs: a variável de ambiente Local (localizada no .env) cria alguns registros iniciais como: assento, aeronave, passageiro, etc. Para facilitar na hora de gerar uma reserva por exemplo.
-- A pasta initial_files é apenas um backup para a criação das tabelas do banco de dados. Isso já é feito ao iniciar a aplicação.
+- A pasta initial_files é apenas um backup para a criação das tabelas do banco de dados e testar alguns endpoints da aplicação pelo HTML. Isso já é feito ao iniciar a aplicação.
 
 ## Pré-requisitos
 
@@ -19,6 +19,10 @@
 - Download do DBeaver para acessar o banco de dados: https://dbeaver.io/download/
 - Download do Postman para executar as requisições: https://www.postman.com/downloads/
 - Download do Redis Insight para visualizar dados do Cache do Redis: https://redis.io/docs/latest/operate/redisinsight/install/install-on-desktop/
+
+>------------------------------------------------------------------------------------------------------------------------------
+# HTML
+Execute o index.html na pasta initial_files após iniciar a aplicação para testar alguns endpoints e requisições para a reserva.
 
 >------------------------------------------------------------------------------------------------------------------------------
 ### ALGUNS COMANDOS PARA TESTES (Kafka):

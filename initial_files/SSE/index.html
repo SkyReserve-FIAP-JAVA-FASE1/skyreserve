@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de CPF</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+            background-color: #fff;
+            padding: 2vh;
+        }
+
+        h1 {
+            font-size: 3vh;
+            color: #333;
+            margin-bottom: 2vh;
+        }
+
+        .input-group {
+            width: 80%;
+            display: flex;
+            justify-content: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 2vh;
+            font-size: 3vh;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            text-align: center;
+        }
+
+        .keyboard {
+            width: 40%;
+            height: 60%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2vh;
+        }
+
+        .keyboard button {
+            padding: 3vh;
+            font-size: 5vh;
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .keyboard button:hover {
+            background-color: #004c99;
+        }
+
+        .keyboard button.clear {
+            background-color: #ff6666;
+        }
+
+        .keyboard button.clear:hover {
+            background-color: #cc3333;
+        }
+
+        button#pesquisar {
+            width: 80%;
+            padding: 3vh;
+            font-size: 3vh;
+            background-color: #0066cc;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button#pesquisar:hover {
+            background-color: #004c99;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Consulta de CPF</h1>
+		<h1 id="mensagem"></h1>
+        <div class="input-group">
+            <input type="text" id="cpf" placeholder="Digite seu CPF" maxlength="11" readonly>
+        </div>
+        <div class="keyboard">
+            <button onclick="inserirNumero('1')">1</button>
+            <button onclick="inserirNumero('2')">2</button>
+            <button onclick="inserirNumero('3')">3</button>
+            <button onclick="inserirNumero('4')">4</button>
+            <button onclick="inserirNumero('5')">5</button>
+            <button onclick="inserirNumero('6')">6</button>
+            <button onclick="inserirNumero('7')">7</button>
+            <button onclick="inserirNumero('8')">8</button>
+            <button onclick="inserirNumero('9')">9</button>
+            <button onclick="inserirNumero('0')">0</button>
+            <button class="clear" onclick="limparCPF()">Limpar</button>
+        </div>
+        <button id="pesquisar" onclick="pesquisarCPF()">Pesquisar</button>
+    </div>
+
+    <script>
+        function inserirNumero(numero) {
+            const cpfInput = document.getElementById("cpf");
+            if (cpfInput.value.length < 11) {
+                cpfInput.value += numero;
+            }
+        }
+
+        function limparCPF() {
+            document.getElementById("cpf").value = "";
+        }
+
+        async function pesquisarCPF() {
+            const cpf = document.getElementById("cpf").value;
+            const mensagem = document.getElementById("mensagem");
+
+            if (cpf.length !== 11) {
+                mensagem.innerHTML = "Por favor, digite um CPF completo (11 dígitos).";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/passageiro/cpf/${cpf}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+					window.location.href = `escolherVoo.html?cpf=${data.cpf}`;
+                    mensagem.innerHTML = `
+                        Passageiro encontrado:<br>
+                        Nome: ${data.nome}
+                    `;
+                } else if (response.status === 404) {
+                    const errorData = await response.json();
+                    mensagem.innerHTML = `${errorData.message}`;
+                } else {
+                    mensagem.innerHTML = "Erro ao buscar o passageiro. Tente novamente.";
+                }
+            } catch (error) {
+                mensagem.innerHTML = "Erro de conexão. Verifique o servidor e tente novamente.";
+                console.error("Erro:", error);
+            }
+        }
+    </script>
+</body>
+</html>

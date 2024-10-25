@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Passageiro e Voos Disponíveis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .info {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+
+        .info p {
+            font-size: 1.2em;
+            color: #555;
+            margin: 8px 0;
+        }
+
+        .flights {
+            margin-top: 20px;
+        }
+
+        .flights h2 {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #0066cc;
+            color: white;
+        }
+
+        .btn-reservar {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .btn-reservar:hover {
+            background-color: #218838;
+        }
+
+        .filter {
+            margin-bottom: 20px;
+        }
+
+        .filter label {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .filter input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #btnPesquisar {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        #btnPesquisar:hover {
+            background-color: #005bb5;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-paginacao {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .btn-paginacao:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-paginacao:disabled {
+            background-color: #c0c0c0;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+		<br><br>
+        <h1>Detalhes do Passageiro</h1>
+        <div class="info" id="detalhesPassageiro">
+            <!-- Detalhes do passageiro serão exibidos aqui -->
+        </div>
+
+        <div class="filter">
+            <label for="origem">Origem:</label>
+            <input type="text" id="origem" />
+
+            <label for="destino">Destino:</label>
+            <input type="text" id="destino" />
+
+            <label for="dataHoraPartidaMin">Data e Hora de Partida Mínima:</label>
+            <input type="datetime-local" id="dataHoraPartidaMin" />
+
+            <label for="dataHoraPartidaMax">Data e Hora de Partida Máxima:</label>
+            <input type="datetime-local" id="dataHoraPartidaMax" />
+
+            <button id="btnPesquisar">Pesquisar</button>
+        </div>
+
+        <div class="flights">
+            <h2>Voos Disponíveis</h2>
+            <table id="tabelaVoos">
+                <thead>
+                    <tr>
+                        <th>Origem</th>
+                        <th>Destino</th>
+                        <th>Data/Hora Partida</th>
+                        <th>Data/Hora Chegada</th>
+                        <th>Aeronave</th>
+                        <th>Reservar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas de voos disponíveis serão adicionadas aqui -->
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <button id="btnAnterior" class="btn-paginacao">Anterior</button>
+            <button id="btnProximo" class="btn-paginacao">Próximo</button>
+        </div>
+    </div>
+
+    <script>
+        let paginaAtual = 0;
+
+        // Função para obter o parâmetro CPF da URL
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        async function carregarDetalhesPassageiro() {
+            const cpf = getQueryParam("cpf");
+            const detalhesDiv = document.getElementById("detalhesPassageiro");
+
+            if (!cpf) {
+                detalhesDiv.innerHTML = "<p>CPF não fornecido.</p>";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8080/passageiro/cpf/${cpf}`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    detalhesDiv.innerHTML = `
+                        <p><strong>Nome:</strong> ${data.nome}</p>
+                        <p><strong>CPF:</strong> ${data.cpf}</p>
+                        <p><strong>E-mail:</strong> ${data.email}</p>
+                        <p><strong>Data de Nascimento:</strong> ${data.dataNascimento}</p>
+                        <p><strong>Celular:</strong> ${data.celular}</p>
+                    `;
+                } else if (response.status === 404) {
+                    const errorData = await response.json();
+                    detalhesDiv.innerHTML = `<p>${errorData.message}</p><p>${errorData.details}</p>`;
+                } else {
+                    detalhesDiv.innerHTML = "<p>Erro ao buscar o passageiro. Tente novamente.</p>";
+                }
+            } catch (error) {
+                detalhesDiv.innerHTML = "<p>Erro de conexão. Verifique o servidor e tente novamente.</p>";
+                console.error("Erro:", error);
+            }
+        }
+
+        async function carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax) {
+            try {
+                const response = await fetch(`http://localhost:8080/voo/search?origem=${origem}&destino=${destino}&dataHoraPartidaMin=${dataHoraPartidaMin}&dataHoraPartidaMax=${dataHoraPartidaMax}&page=${paginaAtual}&size=3&orderBy=data_hora_chegada&direction=ASC`);
+                
+                const tabelaCorpo = document.getElementById("tabelaVoos").getElementsByTagName("tbody")[0];
+
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    tabelaCorpo.innerHTML = ""; // Limpa as linhas existentes
+
+                    if (data.content.length > 0) {
+                        data.content.forEach(voo => {
+                            const novaLinha = tabelaCorpo.insertRow();
+                            novaLinha.innerHTML = `
+                                <td>${voo.origem}</td>
+                                <td>${voo.destino}</td>
+                                <td>${new Date(voo.dataHoraPartida).toLocaleString("pt-BR")}</td>
+                                <td>${new Date(voo.dataHoraChegada).toLocaleString("pt-BR")}</td>
+                                <td>${voo.aeronaveId}</td>
+                                <td><button class="btn-reservar" onclick="reservarVoo('${getQueryParam("cpf")}', '${voo.id}')">Reservar</button></td>
+                            `;
+                        });
+                    } else {
+                        tabelaCorpo.innerHTML = "<tr><td colspan='6'>Nenhum voo disponível.</td></tr>"; // Atualizado para 6 colunas
+                    }
+                } else {
+                    tabelaCorpo.innerHTML = "<tr><td colspan='6'>Erro ao buscar voos. Tente novamente.</td></tr>"; // Atualizado para 6 colunas
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+            }
+        }
+
+        function reservarVoo(cpf, idVoo) {
+            window.location.href = `reservarAssento.html?cpf=${cpf}&idVoo=${idVoo}`;
+        }
+
+        document.getElementById("btnPesquisar").addEventListener("click", () => {
+            const origem = document.getElementById("origem").value;
+            const destino = document.getElementById("destino").value;
+            const dataHoraPartidaMin = document.getElementById("dataHoraPartidaMin").value;
+            const dataHoraPartidaMax = document.getElementById("dataHoraPartidaMax").value;
+
+            carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax);
+        });
+
+        document.getElementById("btnAnterior").addEventListener("click", () => {
+            if (paginaAtual > 0) {
+                paginaAtual--;
+                const origem = document.getElementById("origem").value;
+                const destino = document.getElementById("destino").value;
+                const dataHoraPartidaMin = document.getElementById("dataHoraPartidaMin").value;
+                const dataHoraPartidaMax = document.getElementById("dataHoraPartidaMax").value;
+                carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax);
+            }
+        });
+
+        document.getElementById("btnProximo").addEventListener("click", () => {
+            paginaAtual++;
+            const origem = document.getElementById("origem").value;
+            const destino = document.getElementById("destino").value;
+            const dataHoraPartidaMin = document.getElementById("dataHoraPartidaMin").value;
+            const dataHoraPartidaMax = document.getElementById("dataHoraPartidaMax").value;
+            carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax);
+        });
+
+        // Carrega detalhes do passageiro na inicialização
+        window.onload = carregarDetalhesPassageiro;
+    </script>
+</body>
+</html>
