@@ -43,13 +43,13 @@ public class ReservaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ReservaEntity> save(@RequestBody ReservaEntity reservaEntity) {
-        return vooAssentoService.isAssentoDesbloqueadoRedis(reservaEntity.getAssentoId())
+    public Mono<ReservaEntity> save(@RequestBody ReservaDTO reservaDTO) {
+        return vooAssentoService.isAssentoDesbloqueadoRedis(reservaDTO.getAssentoId())
                 .flatMap(isDesbloqueado -> {
                     if (isDesbloqueado) {
-                        return service.save(new ReservaDTO(reservaEntity));
+                        return service.save(reservaDTO);
                     } else {
-                        return Mono.error(new AssentoIsReservedException("O assento já está reservado: " + reservaEntity.getAssentoId()));
+                        return Mono.error(new AssentoIsReservedException("O assento já está reservado: " + reservaDTO.getAssentoId()));
                     }
                 })
                 .doOnSuccess(savedEntity -> log.info("Reserva salva: {}", savedEntity))
