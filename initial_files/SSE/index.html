@@ -85,6 +85,14 @@
         .keyboard button.clear:hover {
             background-color: #cc3333;
         }
+		
+		.keyboard button.cadastrar {
+            background-color: #648e67;
+        }
+
+        .keyboard button.cadastrar:hover {
+            background-color: #8dca91;
+        }
 
         button#pesquisar {
             width: 80%;
@@ -122,6 +130,7 @@
             <button onclick="inserirNumero('9')">9</button>
             <button onclick="inserirNumero('0')">0</button>
             <button class="clear" onclick="limparCPF()">Limpar</button>
+			<button class="cadastrar" onclick="cadastrar()">Cadastrar</button>
         </div>
         <button id="pesquisar" onclick="pesquisarCPF()">Pesquisar</button>
     </div>
@@ -136,6 +145,10 @@
 
         function limparCPF() {
             document.getElementById("cpf").value = "";
+        }
+		
+		function cadastrar() {
+            window.location.href = 'cadastrar.html';
         }
 
         async function pesquisarCPF() {

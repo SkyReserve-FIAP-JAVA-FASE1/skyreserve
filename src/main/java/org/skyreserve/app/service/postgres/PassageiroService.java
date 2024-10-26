@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.domain.dto.PassageiroDTO;
 import org.skyreserve.domain.entity.PassageiroEntity;
 import org.skyreserve.infra.exceptions.ObjectNotFoundException;
+import org.skyreserve.infra.exceptions.PassengerAlreadyExistsdException;
 import org.skyreserve.infra.repository.postgres.PassageiroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,10 @@ public class PassageiroService {
     public Mono<PassageiroEntity> save(PassageiroDTO obj) {
         return repository.save(new PassageiroEntity(obj))
                 .doOnSuccess(savedEntity -> log.info("Passageiro salvo"))
-                .doOnError(error -> log.error("Erro ao passageiro: ", error));
+                .doOnError(error -> {
+                    log.error("Erro ao salvar passageiro: ", error);
+                    throw new PassengerAlreadyExistsdException("Erro ao salvar passageiro");
+                });
     }
 
     public Mono<PassageiroEntity> update(Long id, PassageiroDTO objDTO) {

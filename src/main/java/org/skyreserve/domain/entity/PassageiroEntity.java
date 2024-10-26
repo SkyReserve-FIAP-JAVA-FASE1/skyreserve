@@ -8,6 +8,8 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import static org.skyreserve.domain.util.AjustesString.removerTracosCpf;
+
 @Getter
 @Setter
 @Builder
@@ -30,7 +32,7 @@ public class PassageiroEntity implements Serializable {
         if(dto != null){
             this.id = dto.getId();
             this.nome = dto.getNome();
-            this.cpf = dto.getCpf();
+            this.cpf = removerTracosCpf(dto.getCpf());
             this.email = dto.getEmail();
             this.numeroPassaporte = dto.getNumeroPassaporte();
             this.dataNascimento = dto.getDataNascimento();

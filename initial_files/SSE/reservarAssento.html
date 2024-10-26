@@ -13,20 +13,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Ocupar toda a altura da tela */
+            height: 100vh;
         }
 
         .container {
             background-color: white;
             border-radius: 10px;
             padding: 20px;
-            width: 100vw; /* Ocupar toda a largura da tela */
-            height: 100vh; /* Ocupar toda a altura da tela */
+            width: 100vw;
+            height: 100vh;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: auto; /* Adiciona scroll se necessário */
+            overflow: auto;
             display: flex;
-            flex-direction: column; /* Flexbox para organizar elementos na coluna */
-            justify-content: center; /* Centraliza verticalmente */
+            flex-direction: column;
+            justify-content: center;
         }
 
         h1 {
@@ -41,24 +41,23 @@
 
         .airplane {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Limita a 4 colunas */
+            grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             justify-items: center;
             margin: 20px 0;
-            overflow:auto;
         }
 
         .seat {
-            width: 100px; /* Aumenta o tamanho do assento */
-            height: 100px; /* Aumenta o tamanho do assento */
+            width: 100px;
+            height: 100px;
             background-color: #b9b9b9;
             border-radius: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 20px; /* Aumenta o tamanho da fonte */
-            color: white; /* Cor do texto */
+            font-size: 20px;
+            color: white;
         }
 
         .seat.selected {
@@ -70,67 +69,26 @@
             cursor: not-allowed;
         }
 
-        .seat:hover:not(.occupied) {
-            background-color: #2a612a;
-        }
-
-        .legend {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .legend .seat {
-            margin: 0;
-        }
-
         .reserve-button {
             width: 100%;
-            padding: 15px; /* Aumenta o espaço do botão */
-            font-size: 22px; /* Aumenta o tamanho da fonte do botão */
+            padding: 15px;
+            font-size: 22px;
             background-color: #28a745;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             text-align: center;
-            margin-top: 20px; /* Adiciona espaço acima do botão */
+            margin-top: 20px;
         }
 
         .reserve-button:disabled {
             background-color: #999;
             cursor: not-allowed;
         }
-
-        .svg-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        /* Media queries para ajuste em telas menores */
-        @media (max-width: 600px) {
-            .seat {
-                width: 60px; /* Diminuir tamanho do assento em telas menores */
-                height: 60px;
-                font-size: 16px; /* Diminuir tamanho da fonte */
-            }
-            
-            .airplane {
-                grid-template-columns: repeat(4, 1fr); /* Mantém 4 colunas em telas menores */
-            }
-        }
-
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>Reserva de Assento</h1>
         <div class="info" id="info"></div> <!-- Local para exibir informações do CPF e ID do Voo -->
@@ -141,132 +99,119 @@
     </div>
 
     <script>
-        var seats = document.querySelectorAll('.seat:not(.occupied)');
         var reserveButton = document.getElementById('reserveButton');
         let selectedSeat = null;
-        var conteudo = '';
-        var vooId = 0;
+        var vooId = 1;
+		var assentoSelecionado = null;
 
-        // Função chamada ao carregar a página
         window.onload = async function() {
-            // Captura os parâmetros da URL
             const params = new URLSearchParams(window.location.search);
-            const cpf = params.get('cpf'); // Captura o CPF
-            const idVoo = params.get('idVoo'); // Captura o ID do Voo
-            
-            // Exibe o CPF e ID do Voo na tela
+            const cpf = params.get('cpf');
+            const idVoo = params.get('idVoo');
             document.getElementById('info').innerText = `CPF: ${cpf} - Código do Voo: ${idVoo}`;
-			vooId = `${idVoo}`;
+            vooId = `${idVoo}`;
             
             try {
                 const response = await fetch('http://localhost:8080/vooassento/voo/' + vooId);
                 const dataLoad = await response.json();
-                for (var i = 0; i < dataLoad.length; i++) {
-                    preencherAssentoIniciando(JSON.stringify(dataLoad[i]));
-                }
+                dataLoad.forEach(data => preencherAssentoIniciando(JSON.stringify(data)));
             } catch (error) {
                 console.error('Erro ao buscar os assentos:', error);
             }
         };
         
-        function preencherAssentoIniciando(jsonstr){
+        function preencherAssentoIniciando(jsonstr) {
             var json = JSON.parse(jsonstr.toString());
-            console.log(json);
-            conteudo = conteudo + '';
-            document.getElementById('conteudo').innerHTML = '';
+            const assentoDiv = document.getElementById(json.id);
 
-            if(json.reservado) 
-                conteudo = conteudo + '<div onclick="assentoocupado(\''+json.id+'\');" class="seat occupied" id="'+json.id+'">'+ json.nomeAssento +'</div>';
-            else
-                conteudo = conteudo + '<div onclick="reservar(\''+json.id+'\');" class="seat selected" id="'+json.id+'">'+ json.nomeAssento +'</div>';
-            
-            document.getElementById('conteudo').innerHTML = conteudo;
+            if (!assentoDiv) {
+                const novoAssentoDiv = document.createElement('div');
+                novoAssentoDiv.id = json.id;
+                novoAssentoDiv.className = json.reservado ? 'seat occupied' : 'seat';
+                novoAssentoDiv.textContent = json.nomeAssento;
+                novoAssentoDiv.onclick = json.reservado 
+                    ? () => assentoocupado(json.id) 
+                    : () => reservar(json.id);
+
+                document.getElementById('conteudo').appendChild(novoAssentoDiv);
+            }
         }
 
-        // Evento de clique para seleção de assentos
-        seats.forEach(seat => {
-            seat.addEventListener('click', () => {
-                if (selectedSeat) {
-                    selectedSeat.classList.remove('selected');
-                }
-                seat.classList.add('selected');
-                selectedSeat = seat;
-
-                // Habilitar botão de reserva
-                reserveButton.disabled = false;
-            });
-        });
-
-        // Evento de clique no botão de reserva
         reserveButton.addEventListener('click', () => {
             if (selectedSeat) {
+				assentoSelecionado = `${selectedSeat.id}`
                 alert(`Assento ${selectedSeat.id} reservado com sucesso!`);
                 selectedSeat.classList.add('occupied');
                 selectedSeat.classList.remove('selected');
-                selectedSeat.removeEventListener('click', null);
                 reserveButton.disabled = true;
                 selectedSeat = null;
             }
         });
 
         function assentoocupado(assento){
-            alert('O Assento '+assento+' está ocupado');
+            alert('O Assento ' + assento + ' está ocupado');
             reserveButton.disabled = true;
         }
 
-        function reservar(nome){
+        function reservar(id) {
+            const seat = document.getElementById(id);
+            if (selectedSeat) selectedSeat.classList.remove('selected');
+            seat.classList.add('selected');
+            selectedSeat = seat;
             reserveButton.disabled = false;
         }
 
-        function finalizar(){
-            alert('O assento está livre para reservar.');
-        }
+        async function finalizar() {
+			// Chame a API de bloqueio, substituindo `1` pelo ID do assento selecionado
+			try {
+				const response = await fetch(`http://localhost:8080/vooassento/bloquear/${selectedSeat.id}`, {
+					method: 'POST'
+				});
+				console.log(response)
+				if (response.ok) {
 
-        // ::::::::::: PREENCHIMENTO PÁGINA :::::::::::
-        function preencherpagina(jsonstr){
+					// Pegue os parâmetros `cpf` e `idVoo` da URL atual
+					const params = new URLSearchParams(window.location.search);
+					const cpf = params.get('cpf');
+					const idVoo = params.get('idVoo');
+					// Redirecione para a nova página com os parâmetros na URL
+					window.location.href = `pagamento.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}`;
+				} else {
+					alert('Erro ao bloquear o assento. Tente novamente.');
+				}
+			} catch (error) {
+				console.error('Erro na requisição de bloqueio:', error);
+			}
+		}
+
+
+        function preencherpagina(jsonstr) {
             atualizarAssentos(jsonstr);
         }
         
-        // Criar a conexão com o endpoint do SSE
         const eventSource = new EventSource('http://localhost:8080/vooassento/stream/' + vooId);
 
-        // Função para tratar as mensagens recebidas
         eventSource.onmessage = function(event) {
-            // Atualizar a exibição da página conforme os dados recebidos do SSE
             preencherpagina(event.data);
         };
 
-        // Função para tratar erros na conexão SSE
         eventSource.onerror = function(error) {
             console.error('Erro SSE:', error);
             const outputDiv = document.getElementById('conteudo');
             outputDiv.innerHTML += `<p style="color: red;">Erro na conexão com SSE</p>`;
         };
-
         
-        // Função que percorre todas as divs e atualiza, cria ou remove conforme necessário
         function atualizarAssentos(data) {
-            var dataLoad = JSON.parse(data.toString());
-            var assento = dataLoad;
-                
-            const conteudoDiv = document.getElementById('conteudo');
-            const assentosAtuais = Array.from(conteudoDiv.children).map(div => div.id);
-            console.log(assentosAtuais)
-            if (!assentosAtuais.includes(assento.id)) {
-                // Se não existe a div, cria uma nova
-                const novoAssentoDiv = document.createElement('div');
-                novoAssentoDiv.id = assento.id;
-                novoAssentoDiv.innerHTML = !assento.reservado
-                    ? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nomeAssento}</div>`
-                    : `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nomeAssento}</div>`;
-                
-                conteudoDiv.appendChild(novoAssentoDiv);
+            var assento = JSON.parse(data.toString());
+            const assentoDiv = document.getElementById(assento.id);
+
+            if (assentoDiv) {
+                assentoDiv.className = assento.reservado ? 'seat occupied' : 'seat';
+                assentoDiv.onclick = assento.reservado
+                    ? () => assentoocupado(assento.id)
+                    : () => reservar(assento.id);
             } else {
-                // Atualiza a div existente
-                const assentoDiv = document.getElementById(assento.id);
-                assentoDiv.innerHTML = !assento.reservado
-                    ? `<div onclick="reservar('${assento.id}');" class="seat selected">${assento.nomeAssento}</div>`
-                    : `<div onclick="assentoocupado('${assento.id}');" class="seat occupied">${assento.nomeAssento}</div>`;
+                preencherAssentoIniciando(JSON.stringify(assento));
             }
         }
     </script>
