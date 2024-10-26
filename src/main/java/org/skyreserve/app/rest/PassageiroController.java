@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.postgres.PassageiroService;
 import org.skyreserve.domain.dto.PassageiroDTO;
-import org.skyreserve.domain.entity.PassageiroEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,29 +22,29 @@ public class PassageiroController {
     private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public Mono<PassageiroEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public Mono<PassageiroDTO> findById(@PathVariable Long id) {
+        return service.findById(id).map(PassageiroDTO::new);
     }
 
     @GetMapping("/cpf/{cpf}")
-    public Mono<PassageiroEntity> findByCpf(@PathVariable String cpf) {
-        return service.findByCpf(cpf);
+    public Mono<PassageiroDTO> findByCpf(@PathVariable String cpf) {
+        return service.findByCpf(cpf).map(PassageiroDTO::new);
     }
 
     @GetMapping
-    public Flux<PassageiroEntity> findAll() {
-        return service.findAll();
+    public Flux<PassageiroDTO> findAll() {
+        return service.findAll().map(PassageiroDTO::new);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<PassageiroEntity> save(@RequestBody PassageiroEntity passageiroEntity) {
-        return service.save(new PassageiroDTO(passageiroEntity));
+    public Mono<PassageiroDTO> save(@RequestBody PassageiroDTO passageiroDTO) {
+        return service.save(passageiroDTO).map(PassageiroDTO::new);
     }
 
     @PutMapping("/{id}")
-    public Mono<PassageiroEntity> update(@PathVariable Long id, @RequestBody PassageiroEntity passageiroEntity) {
-        return service.update(id, new PassageiroDTO(passageiroEntity));
+    public Mono<PassageiroDTO> update(@PathVariable Long id, @RequestBody PassageiroDTO passageiroDTO) {
+        return service.update(id, passageiroDTO).map(PassageiroDTO::new);
     }
 
     @DeleteMapping("/{id}")

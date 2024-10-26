@@ -23,12 +23,12 @@ public class VooController {
     private VooService service;
 
     @GetMapping("/{id}")
-    public Mono<VooEntity> findById(@PathVariable Long id) {
+    public Mono<VooDTO> findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @GetMapping("/search")
-    public Mono<PaginatedResponse<VooEntity>> search(
+    public Mono<PaginatedResponse<VooDTO>> search(
             @RequestParam String origem,
             @RequestParam String destino,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dataHoraPartidaMin,
@@ -41,18 +41,18 @@ public class VooController {
     }
 
     @GetMapping
-    public Flux<VooEntity> findAll() {
+    public Flux<VooDTO> findAll() {
         return service.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<VooEntity> save(@RequestBody VooEntity vooEntity) {
-        return service.save(new VooDTO(vooEntity));
+    public Mono<VooDTO> save(@RequestBody VooDTO vooDTO) {
+        return service.save(vooDTO).map(VooDTO::new);
     }
 
     @PutMapping("/{id}")
-    public Mono<VooEntity> update(@PathVariable Long id, @RequestBody VooEntity vooEntity) {
+    public Mono<VooDTO> update(@PathVariable Long id, @RequestBody VooEntity vooEntity) {
         return service.update(id, new VooDTO(vooEntity));
     }
 

@@ -19,24 +19,24 @@ public class AssentoController {
     private AssentoService service;
 
     @GetMapping("/{id}")
-    public Mono<AssentoEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public Mono<AssentoDTO> findById(@PathVariable Long id) {
+        return service.findById(id).map(AssentoDTO::new);
     }
 
     @GetMapping("/aeronave/{aeronaveid}")
-    public Flux<AssentoEntity> findAllByAeronaveId(@PathVariable Long aeronaveid) {
-        return service.findAllByAeronaveId(aeronaveid);
+    public Flux<AssentoDTO> findAllByAeronaveId(@PathVariable Long aeronaveid) {
+        return service.findAllByAeronaveId(aeronaveid).map(AssentoDTO::new);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AssentoEntity> save(@RequestBody AssentoEntity assentoEntity) {
-        return service.save(new AssentoDTO(assentoEntity));
+    public Mono<AssentoDTO> save(@RequestBody AssentoEntity assentoEntity) {
+        return service.save(new AssentoDTO(assentoEntity)).map(AssentoDTO::new);
     }
 
     @PutMapping("/{id}")
-    public Mono<AssentoEntity> update(@PathVariable Long id, @RequestBody AssentoEntity assentoEntity) {
-        return service.update(id, new AssentoDTO(assentoEntity));
+    public Mono<AssentoDTO> update(@PathVariable Long id, @RequestBody AssentoEntity assentoEntity) {
+        return service.update(id, new AssentoDTO(assentoEntity)).map(AssentoDTO::new);
     }
 
     @DeleteMapping("/{id}")

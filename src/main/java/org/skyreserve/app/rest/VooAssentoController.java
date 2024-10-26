@@ -20,33 +20,33 @@ public class VooAssentoController {
     private VooAssentoService service;
 
     @GetMapping("/{id}")
-    public Mono<VooAssentoEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public Mono<VooAssentoDTO> findById(@PathVariable Long id) {
+        return service.findById(id).map(VooAssentoDTO::new);
     }
 
     @GetMapping("/voo/{vooId}")
-    public Flux<VooAssentoEntity> buscarVooAssentoPorVooId(@PathVariable Long vooId) {
-        return service.buscarVooAssentoPorAeronave(vooId);
+    public Flux<VooAssentoDTO> buscarVooAssentoPorVooId(@PathVariable Long vooId) {
+        return service.buscarVooAssentoPorAeronave(vooId).map(VooAssentoDTO::new);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<VooAssentoEntity> save(@RequestBody VooAssentoEntity vooAssentoEntity) {
-        return service.save(new VooAssentoDTO(vooAssentoEntity))
+    public Mono<VooAssentoDTO> save(@RequestBody VooAssentoDTO vooAssentoDTO) {
+        return service.save(vooAssentoDTO)
                 .doOnSuccess(savedEntity -> {
                     service.notifyListAssentoChanged();
                     log.info("Assento reservado.");
-                })
+                }).map(VooAssentoDTO::new)
                 .doOnError(error -> log.error("Erro ao reservar assento: ", error));
     }
 
     @PutMapping("/{id}")
-    public Mono<VooAssentoEntity> update(@PathVariable Long id, @RequestBody VooAssentoEntity vooAssentoEntity) {
+    public Mono<VooAssentoDTO> update(@PathVariable Long id, @RequestBody VooAssentoEntity vooAssentoEntity) {
         return service.update(id, new VooAssentoDTO(vooAssentoEntity))
                 .doOnSuccess(savedEntity -> {
                     service.notifyListAssentoChanged();
                     log.info("Assento atualizado.");
-                })
+                }).map(VooAssentoDTO::new)
                 .doOnError(error -> log.error("Erro ao atualizar assento: ", error));
     }
 
@@ -101,9 +101,9 @@ public class VooAssentoController {
     }
 
     @GetMapping(value = "/stream/{vooid}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<VooAssentoEntity> getAssentosAtualizadosPeloVoo(@PathVariable Long vooid) {
+    public Flux<VooAssentoDTO> getAssentosAtualizadosPeloVoo(@PathVariable Long vooid) {
         return service.getAssentosAtualizados().filter(vooAssentoEntity ->
-                vooAssentoEntity.getVooId().equals(vooid));
+                vooAssentoEntity.getVooId().equals(vooid)).map(VooAssentoDTO::new);
     }
 
 

@@ -6,7 +6,6 @@ import org.skyreserve.app.service.postgres.AssentoService;
 import org.skyreserve.app.service.postgres.ReservaService;
 import org.skyreserve.app.service.postgres.VooAssentoService;
 import org.skyreserve.domain.dto.ReservaDTO;
-import org.skyreserve.domain.entity.ReservaEntity;
 import org.skyreserve.infra.exceptions.AssentoIsReservedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,22 +31,22 @@ public class ReservaController {
     private VooAssentoService vooAssentoService;
 
     @GetMapping("/{id}")
-    public Mono<ReservaEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public Mono<ReservaDTO> findById(@PathVariable Long id) {
+        return service.findById(id).map(ReservaDTO::new);
     }
 
     @GetMapping
-    public Flux<ReservaEntity> findAll() {
-        return service.findAll();
+    public Flux<ReservaDTO> findAll() {
+        return service.findAll().map(ReservaDTO::new);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ReservaEntity> save(@RequestBody ReservaDTO reservaDTO) {
+    public Mono<ReservaDTO> save(@RequestBody ReservaDTO reservaDTO) {
         return vooAssentoService.isAssentoDesbloqueadoRedis(reservaDTO.getAssentoId())
                 .flatMap(isDesbloqueado -> {
                     if (isDesbloqueado) {
-                        return service.save(reservaDTO);
+                        return service.save(reservaDTO).map(ReservaDTO::new);
                     } else {
                         return Mono.error(new AssentoIsReservedException("O assento já está reservado: " + reservaDTO.getAssentoId()));
                     }
@@ -57,8 +56,8 @@ public class ReservaController {
     }
 
     @PutMapping("/{id}")
-    public Mono<ReservaEntity> update(@PathVariable Long id, @RequestBody ReservaEntity reservaEntity) {
-        return service.update(id, new ReservaDTO(reservaEntity));
+    public Mono<ReservaDTO> update(@PathVariable Long id, @RequestBody ReservaDTO reservaDTO) {
+        return service.update(id, reservaDTO).map(ReservaDTO::new);
     }
 
     @DeleteMapping("/{id}")

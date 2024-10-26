@@ -23,24 +23,24 @@ public class AeronaveController {
     private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public Mono<AeronaveEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public Mono<AeronaveDTO> findById(@PathVariable Long id) {
+        return service.findById(id).map(AeronaveDTO::new);
     }
 
     @GetMapping
-    public Flux<AeronaveEntity> findAll() {
-        return service.findAll();
+    public Flux<AeronaveDTO> findAll() {
+        return service.findAll().map(AeronaveDTO::new);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<AeronaveEntity> save(@RequestBody AeronaveEntity aeronaveEntity) {
-        return service.save(new AeronaveDTO(aeronaveEntity));
+    public Mono<AeronaveDTO> save(@RequestBody AeronaveEntity aeronaveEntity) {
+        return service.save(new AeronaveDTO(aeronaveEntity)).map(AeronaveDTO::new);
     }
 
     @PutMapping("/{id}")
-    public Mono<AeronaveEntity> update(@PathVariable Long id, @RequestBody AeronaveEntity aeronaveEntity) {
-        return service.update(id, new AeronaveDTO(aeronaveEntity));
+    public Mono<AeronaveDTO> update(@PathVariable Long id, @RequestBody AeronaveEntity aeronaveEntity) {
+        return service.update(id, new AeronaveDTO(aeronaveEntity)).map(AeronaveDTO::new);
     }
 
     @DeleteMapping("/{id}")

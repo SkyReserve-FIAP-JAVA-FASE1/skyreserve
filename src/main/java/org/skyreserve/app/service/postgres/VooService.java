@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -26,27 +27,25 @@ public class VooService {
     @Autowired
     private VooCustomRepository repositoryCustom;
 
-    public Mono<VooEntity> findById(Long id) {
-        return repository.findById(id)
+    public Mono<VooDTO> findById(Long id) {
+        return repository.findById(id).map(VooDTO :: new)
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Voo não encontrado com id: " + id)));
     }
 
-    public Flux<VooEntity> findAll() {
-        return repository.findAll();
+    public Flux<VooDTO> findAll() {
+        return repository.findAll().map(VooDTO :: new);
     }
 
-    public Mono<PaginatedResponse<VooEntity>> findByVooParamters(String origem, String destino, LocalDateTime dataHoraPartidaMin, LocalDateTime dataHoraPartidaMax, int page, int size, String orderBy, String direction) {
+    public Mono<PaginatedResponse<VooDTO>> findByVooParamters(String origem, String destino, LocalDateTime dataHoraPartidaMin, LocalDateTime dataHoraPartidaMax, int page, int size, String orderBy, String direction) {
         return repositoryCustom.findByVooParamters(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, page, size, orderBy, direction)
                 .collectList()
                 .zipWith(repository.count())
                 .map(tuple -> {
-                    List<VooEntity> content = tuple.getT1();
+                    List<VooDTO> content = tuple.getT1().stream().map(VooDTO::new).collect(Collectors.toList());
                     long totalElements = tuple.getT2();
                     int totalPages = (int) Math.ceil((double) totalElements / size);
                     return new PaginatedResponse<>(content, totalPages, totalElements, page);
                 });
-
-        //return repositoryCustom.findByVooParamters(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, page, size, orderBy, direction);
     }
 
     public Mono<Void> deleteById(Long id) {
@@ -59,7 +58,7 @@ public class VooService {
                 .doOnError(error -> log.error("Erro ao salvar voo: ", error));
     }
 
-    public Mono<VooEntity> update(Long id, VooDTO objDTO) {
+    public Mono<VooDTO> update(Long id, VooDTO objDTO) {
         return repository.findById(id)
                 .flatMap(entity -> {
                     entity.setId(id);
@@ -69,7 +68,7 @@ public class VooService {
                     entity.setDataHoraChegada(entity.getDataHoraChegada());
                     entity.setAeronaveId(entity.getAeronaveId());
 
-                    return repository.save(entity);
+                    return repository.save(entity).map(VooDTO :: new);
                 })
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Voo não encontrado com id: " + id)));
     }

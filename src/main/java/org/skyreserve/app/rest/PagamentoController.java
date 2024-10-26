@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.postgres.PagamentoService;
 import org.skyreserve.domain.dto.PagamentoDTO;
-import org.skyreserve.domain.entity.PagamentoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,24 +22,24 @@ public class PagamentoController {
     private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public Mono<PagamentoEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public Mono<PagamentoDTO> findById(@PathVariable Long id) {
+        return service.findById(id).map(PagamentoDTO::new);
     }
 
     @GetMapping
-    public Flux<PagamentoEntity> findAll() {
-        return service.findAll();
+    public Flux<PagamentoDTO> findAll() {
+        return service.findAll().map(PagamentoDTO::new);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<PagamentoEntity> save(@RequestBody PagamentoEntity pagamentoEntity) {
-        return service.save(new PagamentoDTO(pagamentoEntity));
+    public Mono<PagamentoDTO> save(@RequestBody PagamentoDTO pagamentoDTO) {
+        return service.save(pagamentoDTO).map(PagamentoDTO::new);
     }
 
     @PutMapping("/{id}")
-    public Mono<PagamentoEntity> update(@PathVariable Long id, @RequestBody PagamentoEntity pagamentoEntity) {
-        return service.update(id, new PagamentoDTO(pagamentoEntity));
+    public Mono<PagamentoDTO> update(@PathVariable Long id, @RequestBody PagamentoDTO pagamentoDTO) {
+        return service.update(id, pagamentoDTO).map(PagamentoDTO::new);
     }
 
     @DeleteMapping("/{id}")

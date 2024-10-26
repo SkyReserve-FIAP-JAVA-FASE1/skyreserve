@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.postgres.ReembolsoService;
 import org.skyreserve.domain.dto.ReembolsoDTO;
-import org.skyreserve.domain.entity.ReembolsoEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,24 +22,24 @@ public class ReembolsoController {
     private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public Mono<ReembolsoEntity> findById(@PathVariable Long id) {
-        return service.findById(id);
+    public Mono<ReembolsoDTO> findById(@PathVariable Long id) {
+        return service.findById(id).map(ReembolsoDTO::new);
     }
 
     @GetMapping
-    public Flux<ReembolsoEntity> findAll() {
-        return service.findAll();
+    public Flux<ReembolsoDTO> findAll() {
+        return service.findAll().map(ReembolsoDTO::new);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Mono<ReembolsoEntity> save(@RequestBody ReembolsoEntity reembolsoEntity) {
-        return service.save(new ReembolsoDTO(reembolsoEntity));
+    public Mono<ReembolsoDTO> save(@RequestBody ReembolsoDTO reembolsoDTO) {
+        return service.save(reembolsoDTO).map(ReembolsoDTO::new);
     }
 
     @PutMapping("/{id}")
-    public Mono<ReembolsoEntity> update(@PathVariable Long id, @RequestBody ReembolsoEntity reembolsoEntity) {
-        return service.update(id, new ReembolsoDTO(reembolsoEntity));
+    public Mono<ReembolsoDTO> update(@PathVariable Long id, @RequestBody ReembolsoDTO reembolsoDTO) {
+        return service.update(id, reembolsoDTO).map(ReembolsoDTO::new);
     }
 
     @DeleteMapping("/{id}")
