@@ -87,24 +87,23 @@ public class KafkaConsumerSkyTopic {
 
                                     return reservaService.save(reservaDTO)
                                         .flatMap(reserva -> {
-                                            if (!requisicaoReservaDTO.getFormaPagamento().equals(TipoPagamentoEnum.BOLETO.getDescricao())) {
-                                                PagamentoDTO pagamentoDTO = PagamentoDTO.builder()
-                                                    .reservaId(reserva.getId())
-                                                    .valorTotal(reserva.getValorReserva())
-                                                    .dataPagamento(LocalDateTime.now())
-                                                    .statusPagamento(StatusPagamentoEnum.PAGO)
-                                                .build();
-                                                return pagamentoService.save(pagamentoDTO)
-                                                    .flatMap(pgto -> {
-                                                        reserva.setPagamentoId(pgto.getId());
-                                                        log.info("Atualizando reserva com ID: {} e pagamento ID: {}", reserva.getId(), pgto.getId());
-                                                        return reservaService.update(reserva.getId(), new ReservaDTO(reserva))
-                                                            .doOnSuccess(updatedReserva -> log.info("Reserva atualizada com sucesso: {}", updatedReserva))
-                                                            .doOnError(e -> log.error("Erro ao atualizar reserva: ", e));
-                                                    })
-                                                    .then(Mono.just(reserva));
-                                                }
-                                                return Mono.just(reserva);
+                                            PagamentoDTO pagamentoDTO = PagamentoDTO.builder()
+                                                .reservaId(reserva.getId())
+                                                .valorTotal(reserva.getValorReserva())
+                                                .dataPagamento(LocalDateTime.now())
+                                                .statusPagamento(
+                                                    requisicaoReservaDTO.getFormaPagamento().equals(TipoPagamentoEnum.BOLETO.getDescricao()) ?
+                                                    StatusPagamentoEnum.PAGO : StatusPagamentoEnum.PENDENTE_PAGAMENTO)
+                                            .build();
+                                            return pagamentoService.save(pagamentoDTO)
+                                                .flatMap(pgto -> {
+                                                    reserva.setPagamentoId(pgto.getId());
+                                                    log.info("Atualizando reserva com ID: {} e pagamento ID: {}", reserva.getId(), pgto.getId());
+                                                    return reservaService.update(reserva.getId(), new ReservaDTO(reserva))
+                                                        .doOnSuccess(updatedReserva -> log.info("Reserva atualizada com sucesso: {}", updatedReserva))
+                                                        .doOnError(e -> log.error("Erro ao atualizar reserva: ", e));
+                                                })
+                                                .then(Mono.just(reserva));
                                             });
                                         });
                             })
