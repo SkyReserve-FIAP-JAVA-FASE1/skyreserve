@@ -23,6 +23,7 @@ public class VooAssentoEntity implements Serializable {
     private String nomeAssento;
     private boolean reservado = false;
     private BigDecimal valorAssento = BigDecimal.ZERO;
+    private BigDecimal valorBagagem = BigDecimal.ZERO;
 
     public VooAssentoEntity(VooAssentoDTO dto) {
         if (dto != null) {
@@ -32,6 +33,7 @@ public class VooAssentoEntity implements Serializable {
             this.reservado = dto.isReservado();
             this.nomeAssento = dto.getNomeAssento();
             this.valorAssento = dto.getValorAssento();
+            this.valorBagagem = dto.getValorBagagem();
         }
     }
 }

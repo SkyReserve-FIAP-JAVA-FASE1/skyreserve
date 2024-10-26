@@ -19,6 +19,7 @@ public class VooAssentoDTO {
     private String nomeAssento;
     private boolean reservado = false;
     private BigDecimal valorAssento = BigDecimal.ZERO;
+    private BigDecimal valorBagagem = BigDecimal.ZERO;
 
     public VooAssentoDTO(VooAssentoEntity entity) {
         id = entity.getId();
@@ -27,6 +28,7 @@ public class VooAssentoDTO {
         nomeAssento = entity.getNomeAssento();
         reservado = entity.isReservado();
         valorAssento = entity.getValorAssento();
+        valorBagagem = entity.getValorBagagem();
     }
 
     @Override
@@ -37,6 +39,7 @@ public class VooAssentoDTO {
                 ", assentoId='" + assentoId + '\'' +
                 ", nomeAssento='" + nomeAssento + '\'' +
                 ", valorAssento='" + valorAssento + '\'' +
+                ", valorBagagem='" + valorBagagem + '\'' +
                 ", reservado=" + reservado +
                 '}';
     }

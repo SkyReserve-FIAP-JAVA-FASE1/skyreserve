@@ -68,12 +68,13 @@
     const idVoo = params.get('idVoo');
     const assentoSelecionado = params.get('assentoSelecionado');
     const formaPagamento = params.get('formaPagamento');
+	const bagagem = params.get('bagagem');
 
     const paymentDetails = `
-        <p><strong>CPF:</strong> ${cpf}</p>
+        <p><strong>CPF:</strong> <span id="campoCPF" >${cpf}</span></p>
         <p><strong>ID do Voo:</strong> ${idVoo}</p>
-        <p><strong>Assento Selecionado:</strong> ${assentoSelecionado}</p>
         <p><strong>Forma de Pagamento:</strong> ${formaPagamento}</p>
+        <p><strong>Bagagem:</strong> ${bagagem == 'true' ? 'Sim' : 'Não'}</p>
     `;
 
     document.getElementById('paymentDetails').innerHTML = paymentDetails;
@@ -94,12 +95,19 @@
         })
         .then(data => {
 			document.getElementById('paymentDetails').innerHTML = document.getElementById('paymentDetails').innerHTML + 
-			`<p><strong>Assento:</strong> <br>${data.nomeAssento} - Valor: R$ ${data.valorAssento.toFixed(2)}`;
+			`<p><strong>Assento:</strong> ${data.nomeAssento}`  + 
+			`<p><strong>Valor Assento:</strong> R$ ${data.valorAssento.toFixed(2)}`  + 
+			`<p><strong>Valor Bagagem:</strong> R$ ${(bagagem == 'true' ? data.valorBagagem : 0).toFixed(2)}`  + 
+			
+			`<br>&nbsp;<p><strong>VALOR TOTAL:</strong> <br>${(data.valorAssento + (bagagem == 'true' ? data.valorBagagem : 0)).toFixed(2)}`;
+			
+			
         })
         .catch(error => {
             console.error('Erro ao buscar valor do assento:', error);
             alert('Não foi possível obter o valor do assento. Tente novamente.');
         });
+		formatarCPF();
     };
 	
 	
@@ -107,6 +115,16 @@
 		alert("Reserva confirmada!");
 	}
 	
+	function formatarCPF() {
+			var campo = document.getElementById("campoCPF").innerHTML;
+            let cpf = campo.replace(/\D/g, '');
+
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+            campo = cpf;
+			document.getElementById("campoCPF").innerHTML = cpf;
+        }
 	
 </script>
 

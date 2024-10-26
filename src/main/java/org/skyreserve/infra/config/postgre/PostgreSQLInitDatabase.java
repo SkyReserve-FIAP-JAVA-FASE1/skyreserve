@@ -68,6 +68,7 @@ public class PostgreSQLInitDatabase {
                         "                    reservado BOOLEAN DEFAULT FALSE,\n" +
                         "                    nome_assento VARCHAR(255),\n" +
                         "                    valor_assento NUMERIC(15, 2) DEFAULT 0.0, \n" +
+                        "                    valor_bagagem NUMERIC(15, 2) DEFAULT 0.0, \n" +
                         "                    voo_id INT NOT NULL,\n" +
                         "                    assento_id INT NOT NULL,\n" +
                         "                    CONSTRAINT fk_vooassento_voo FOREIGN KEY (voo_id) REFERENCES voo (id),\n" +

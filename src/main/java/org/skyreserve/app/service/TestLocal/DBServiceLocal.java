@@ -78,23 +78,23 @@ public class DBServiceLocal {
 
                 // INSERÇÃO DO ASSENTO VÔO
                 databaseClient.sql("INSERT INTO public.vooassento\n" +
-                                "(id, reservado, nome_assento, voo_id, valor_assento, assento_id)\n" +
-                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A1', 1, 430.89, 1);")
+                                "(id, reservado, nome_assento, voo_id, valor_assento, valor_bagagem, assento_id)\n" +
+                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A1', 1, 430.89, 100.00, 1);")
                         .fetch().rowsUpdated().block();
 
                 databaseClient.sql("INSERT INTO public.vooassento\n" +
-                                "(id, reservado, nome_assento, voo_id, valor_assento, assento_id)\n" +
-                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A2', 1, 457.28, 2);")
+                                "(id, reservado, nome_assento, voo_id, valor_assento, valor_bagagem, assento_id)\n" +
+                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A2', 1, 457.28, 90.00, 2);")
                         .fetch().rowsUpdated().block();
 
                 databaseClient.sql("INSERT INTO public.vooassento\n" +
-                                "(id, reservado, nome_assento, voo_id, valor_assento, assento_id)\n" +
-                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A3', 1, 489.36, 3);")
+                                "(id, reservado, nome_assento, voo_id, valor_assento, valor_bagagem, assento_id)\n" +
+                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A3', 1, 489.36, 80.00, 3);")
                         .fetch().rowsUpdated().block();
 
                 databaseClient.sql("INSERT INTO public.vooassento\n" +
-                                "(id, reservado, nome_assento, voo_id, valor_assento, assento_id)\n" +
-                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A4', 1, 496.47, 4);")
+                                "(id, reservado, nome_assento, voo_id, valor_assento, valor_bagagem, assento_id)\n" +
+                                "VALUES(nextval('vooassento_id_seq'::regclass), false, 'F1A4', 1, 496.47, 70.00, 4);")
                         .fetch().rowsUpdated().block();
 
 

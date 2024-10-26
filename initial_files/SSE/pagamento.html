@@ -67,9 +67,10 @@
     
     <h1>Pagamento</h1>
     <form id="paymentForm">
-        <input type="hidden" name="cpf" value="22222222222">
-        <input type="hidden" name="idVoo" value="1">
-        <input type="hidden" name="assentoSelecionado" value="7">
+        <input type="hidden" name="cpf" value="">
+        <input type="hidden" name="idVoo" value="">
+        <input type="hidden" name="assentoSelecionado" value="">
+        <input type="hidden" name="bagagem" value="">
 
         <label for="paymentMethod" style="font-size: 20px;">Forma de Pagamento:</label>
         <select id="paymentMethod" name="paymentMethod" required>
@@ -88,13 +89,15 @@
     const cpf = params.get('cpf');
     const idVoo = params.get('idVoo');
     const assentoSelecionado = params.get('assentoSelecionado');
+    const bagagem = params.get('bagagem');
     const formaPagamento = params.get('formaPagamento');
 
     const paymentDetails = `
         <strong>CPF:</strong> ${cpf} <br>
         <strong>ID do Voo:</strong> ${idVoo} <br>
         <strong>Assento Selecionado:</strong> ${assentoSelecionado} <br>
-        <strong>Forma de Pagamento:</strong> ${formaPagamento || "Não selecionada"}
+        <strong>Forma de Pagamento:</strong> ${formaPagamento || "Não selecionada"}<br>
+		<strong>Bagagem?:</strong> ${bagagem == 'true' ? 'Sim' : 'Não'}
     `;
 
     document.getElementById('paymentDetails').innerHTML = paymentDetails;
@@ -103,7 +106,7 @@
         const paymentMethod = document.getElementById('paymentMethod').value;
 
         if (paymentMethod) {
-            const url = `finalizar.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}&formaPagamento=${paymentMethod}`;
+            const url = `finalizar.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}&formaPagamento=${paymentMethod}&bagagem=${bagagem}`;
             window.location.href = url;
         } else {
             alert("Por favor, selecione uma forma de pagamento.");
@@ -122,7 +125,10 @@
         })
         .then(data => {
 			document.getElementById('paymentDetails').innerHTML = document.getElementById('paymentDetails').innerHTML + 
-			`<br><b>Assento:</b> ${data.nomeAssento} - Valor: R$ ${data.valorAssento.toFixed(2)}`;
+			`<br><b>Assento:</b> ${data.nomeAssento} - Valor: R$ ${data.valorAssento.toFixed(2)}` + 
+			`<br><b>Valor Bagagem:</b> R$ ${bagagem == 'true' ? data.valorBagagem.toFixed(2) : 'R$0,00'}` +
+			
+			`<br><br><b>TOTAL À PAGAR:</b> R$ ${(data.valorAssento + (bagagem == 'true' ? data.valorBagagem : 0)).toFixed(2)}`;
         })
         .catch(error => {
             console.error('Erro ao buscar valor do assento:', error);

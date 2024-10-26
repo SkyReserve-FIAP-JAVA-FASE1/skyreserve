@@ -103,11 +103,13 @@
         let selectedSeat = null;
         var vooId = 1;
 		var assentoSelecionado = null;
+		var bagagemSelecionada = false;
 
         window.onload = async function() {
             const params = new URLSearchParams(window.location.search);
             const cpf = params.get('cpf');
             const idVoo = params.get('idVoo');
+            bagagemSelecionada = params.get('bagagem');
             vooId = `${idVoo}`;
             
             try {
@@ -162,7 +164,6 @@
         }
 		
 		function buscarValorAssento(assento){
-			// Chama o endpoint para obter o valor do assento selecionado
 			fetch(`http://localhost:8080/vooassento/${assento}`)
 				.then(response => {
 					if (!response.ok) {
@@ -172,7 +173,11 @@
 				})
 				.then(data => {
 					// Aqui você pode usar o valor do assento como desejar
-					document.getElementById('info').innerHTML = `Assento: ${data.nomeAssento}, Valor: R$ ${data.valorAssento.toFixed(2)}`;
+					if(bagagemSelecionada == 'true'){
+						document.getElementById('info').innerHTML = `Assento: ${data.nomeAssento}, Valor assento: R$ ${data.valorAssento.toFixed(2)}, Valor Bagagem: R$ ${data.valorBagagem.toFixed(2)}`;
+					} else{
+						document.getElementById('info').innerHTML = `Assento: ${data.nomeAssento}, Valor assento: R$ ${data.valorAssento.toFixed(2)}`;
+					}
 				})
 				.catch(error => {
 					console.error('Erro ao buscar valor do assento:', error);
@@ -188,13 +193,12 @@
 				});
 				console.log(response)
 				if (response.ok) {
-
 					// Pegue os parâmetros `cpf` e `idVoo` da URL atual
 					const params = new URLSearchParams(window.location.search);
 					const cpf = params.get('cpf');
 					const idVoo = params.get('idVoo');
 					// Redirecione para a nova página com os parâmetros na URL
-					window.location.href = `pagamento.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}`;
+					window.location.href = `pagamento.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}&bagagem=${bagagemSelecionada}`;
 				} else {
 					alert('Erro ao bloquear o assento. Tente novamente.');
 				}

@@ -104,7 +104,7 @@
             margin: 5px 0;
         }
 
-        .filter input {
+        .filter input, .filter select {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
@@ -177,6 +177,12 @@
             <label for="dataHoraPartidaMax">Data e Hora de Partida Máxima:</label>
             <input type="datetime-local" id="dataHoraPartidaMax" />
 
+			<label>Contém Bagagem:</label>
+            <select id="bagagem">
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+            </select>
+
             <button id="btnPesquisar">Pesquisar</button>
         </div>
 
@@ -247,7 +253,7 @@
             }
         }
 
-        async function carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax) {
+        async function carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, bagagem) {
             try {
                 const response = await fetch(`http://localhost:8080/voo/search?origem=${origem}&destino=${destino}&dataHoraPartidaMin=${dataHoraPartidaMin}&dataHoraPartidaMax=${dataHoraPartidaMax}&page=${paginaAtual}&size=3&orderBy=data_hora_chegada&direction=ASC`);
                 
@@ -257,8 +263,7 @@
                     const data = await response.json();
                     
                     tabelaCorpo.innerHTML = ""; // Limpa as linhas existentes
-
-                    if (data.content.length > 0) {
+					if (data.content.length > 0) {
                         data.content.forEach(voo => {
                             const novaLinha = tabelaCorpo.insertRow();
                             novaLinha.innerHTML = `
@@ -267,7 +272,7 @@
                                 <td>${new Date(voo.dataHoraPartida).toLocaleString("pt-BR")}</td>
                                 <td>${new Date(voo.dataHoraChegada).toLocaleString("pt-BR")}</td>
                                 <td>${voo.aeronaveId}</td>
-                                <td><button class="btn-reservar" onclick="reservarVoo('${getQueryParam("cpf")}', '${voo.id}')">Reservar</button></td>
+                                <td><button class="btn-reservar" onclick="reservarVoo('${getQueryParam("cpf")}', '${voo.id}', '${bagagem}')">Reservar</button></td>
                             `;
                         });
                     } else {
@@ -281,8 +286,8 @@
             }
         }
 
-        function reservarVoo(cpf, idVoo) {
-            window.location.href = `reservarAssento.html?cpf=${cpf}&idVoo=${idVoo}`;
+        function reservarVoo(cpf, idVoo, bagagem) {
+            window.location.href = `reservarAssento.html?cpf=${cpf}&idVoo=${idVoo}&bagagem=${bagagem}`;
         }
 
         document.getElementById("btnPesquisar").addEventListener("click", () => {
@@ -290,8 +295,8 @@
             const destino = document.getElementById("destino").value;
             const dataHoraPartidaMin = document.getElementById("dataHoraPartidaMin").value;
             const dataHoraPartidaMax = document.getElementById("dataHoraPartidaMax").value;
-
-            carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax);
+			const bagagem = document.getElementById("bagagem").value;
+            carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, bagagem);
         });
 
         document.getElementById("btnAnterior").addEventListener("click", () => {
@@ -301,7 +306,8 @@
                 const destino = document.getElementById("destino").value;
                 const dataHoraPartidaMin = document.getElementById("dataHoraPartidaMin").value;
                 const dataHoraPartidaMax = document.getElementById("dataHoraPartidaMax").value;
-                carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax);
+                const bagagem = document.getElementById("bagagem").value;
+                carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, bagagem);
             }
         });
 
@@ -311,7 +317,8 @@
             const destino = document.getElementById("destino").value;
             const dataHoraPartidaMin = document.getElementById("dataHoraPartidaMin").value;
             const dataHoraPartidaMax = document.getElementById("dataHoraPartidaMax").value;
-            carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax);
+            const bagagem = document.getElementById("bagagem").value;
+            carregarVoos(origem, destino, dataHoraPartidaMin, dataHoraPartidaMax, bagagem);
         });
 
         // Carrega detalhes do passageiro na inicialização
