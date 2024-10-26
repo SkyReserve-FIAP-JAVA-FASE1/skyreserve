@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Pagamento</title>
+    <style>
+        html, body {
+            height: 100%; /* Ocupar 100% da altura */
+            margin: 0; /* Remover margens padrão */
+            display: flex; /* Usar flexbox para centralização */
+            justify-content: center; /* Centralizar horizontalmente */
+            align-items: center; /* Centralizar verticalmente */
+            background-color: #f4f4f4; /* Cor de fundo */
+			font-family: 'Roboto', sans-serif;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Largura total */
+            height: 100%; /* Altura total */
+            display: flex;
+            flex-direction: column; /* Alinhar itens na vertical */
+            justify-content: center; /* Centralizar verticalmente */
+            align-items: center; /* Centralizar horizontalmente */
+            text-align: center; /* Centralizar texto */
+        }
+		.containertitulo {
+            text-align: left; /* Centralizar texto */
+        }
+        h1 {
+            font-size: 36px; /* Tamanho maior para o título */
+            margin-bottom: 20px;
+        }
+        select, button {
+            padding: 15px; /* Aumentar o padding */
+            margin: 10px 0;
+            width: 80%; /* Largura adaptável */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 18px; /* Tamanho da fonte */
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 20px; /* Tamanho da fonte do botão */
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Finalizar Pagamento</h1>
+    
+    <div class="containertitulo">
+        <p id="paymentDetails" style="font-size: 20px;"></p>
+        <br>
+    </div>
+    
+    <h1>Pagamento</h1>
+    <form id="paymentForm">
+        <input type="hidden" name="cpf" value="22222222222">
+        <input type="hidden" name="idVoo" value="1">
+        <input type="hidden" name="assentoSelecionado" value="7">
+
+        <label for="paymentMethod" style="font-size: 20px;">Forma de Pagamento:</label>
+        <select id="paymentMethod" name="paymentMethod" required>
+            <option value="">Selecione</option>
+            <option value="BOLETO">Boleto</option>
+            <option value="CARTAO">Cartão</option>
+            <option value="PIX">Pix</option>
+        </select>
+
+        <button type="button" id="payButton">PAGAR</button>
+    </form>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const cpf = params.get('cpf');
+    const idVoo = params.get('idVoo');
+    const assentoSelecionado = params.get('assentoSelecionado');
+    const formaPagamento = params.get('formaPagamento');
+
+    const paymentDetails = `
+        <strong>CPF:</strong> ${cpf} <br>
+        <strong>ID do Voo:</strong> ${idVoo} <br>
+        <strong>Assento Selecionado:</strong> ${assentoSelecionado} <br>
+        <strong>Forma de Pagamento:</strong> ${formaPagamento || "Não selecionada"}
+    `;
+
+    document.getElementById('paymentDetails').innerHTML = paymentDetails;
+	
+    document.getElementById('payButton').addEventListener('click', function() {
+        const paymentMethod = document.getElementById('paymentMethod').value;
+
+        if (paymentMethod) {
+            const url = `finalizar.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}&formaPagamento=${paymentMethod}`;
+            window.location.href = url;
+        } else {
+            alert("Por favor, selecione uma forma de pagamento.");
+        }
+    });
+</script>
+
+</body>
+</html>
