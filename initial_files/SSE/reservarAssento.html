@@ -108,7 +108,6 @@
             const params = new URLSearchParams(window.location.search);
             const cpf = params.get('cpf');
             const idVoo = params.get('idVoo');
-            document.getElementById('info').innerText = `CPF: ${cpf} - Código do Voo: ${idVoo}`;
             vooId = `${idVoo}`;
             
             try {
@@ -159,7 +158,27 @@
             seat.classList.add('selected');
             selectedSeat = seat;
             reserveButton.disabled = false;
+			buscarValorAssento(id);
         }
+		
+		function buscarValorAssento(assento){
+			// Chama o endpoint para obter o valor do assento selecionado
+			fetch(`http://localhost:8080/vooassento/${assento}`)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Erro ao buscar informações do assento');
+					}
+					return response.json();
+				})
+				.then(data => {
+					// Aqui você pode usar o valor do assento como desejar
+					document.getElementById('info').innerHTML = `Assento: ${data.nomeAssento}, Valor: R$ ${data.valorAssento.toFixed(2)}`;
+				})
+				.catch(error => {
+					console.error('Erro ao buscar valor do assento:', error);
+					alert('Não foi possível obter o valor do assento. Tente novamente.');
+				});
+		}
 
         async function finalizar() {
 			// Chame a API de bloqueio, substituindo `1` pelo ID do assento selecionado
