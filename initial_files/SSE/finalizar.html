@@ -140,15 +140,15 @@
 	}
 	
 	function formatarCPF() {
-			var campo = document.getElementById("campoCPF").innerHTML;
-            let cpf = campo.replace(/\D/g, '');
+		var campo = document.getElementById("campoCPF").innerHTML;
+		let cpf = campo.replace(/\D/g, '');
 
-            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-            campo = cpf;
-			document.getElementById("campoCPF").innerHTML = cpf;
-        }
+		cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+		cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+		cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+		campo = cpf;
+		document.getElementById("campoCPF").innerHTML = cpf;
+	}
 	
 </script>
 

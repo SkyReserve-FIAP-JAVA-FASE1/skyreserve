@@ -93,7 +93,7 @@
     const formaPagamento = params.get('formaPagamento');
 
     const paymentDetails = `
-        <strong>CPF:</strong> ${cpf} <br>
+        <strong>CPF:</strong> <span id="campoCPF" >${cpf}</span> <br>
         <strong>ID do Voo:</strong> ${idVoo} <br>
         <strong>Assento Selecionado:</strong> ${assentoSelecionado} <br>
         <strong>Forma de Pagamento:</strong> ${formaPagamento || "Não selecionada"}<br>
@@ -103,16 +103,48 @@
     document.getElementById('paymentDetails').innerHTML = paymentDetails;
 	
     document.getElementById('payButton').addEventListener('click', function() {
-        const paymentMethod = document.getElementById('paymentMethod').value;
+	
+		const paymentMethod = document.getElementById('paymentMethod').value;
 
-        if (paymentMethod) {
-            const url = `finalizar.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}&formaPagamento=${paymentMethod}&bagagem=${bagagem}`;
-            window.location.href = url;
-        } else {
-            alert("Por favor, selecione uma forma de pagamento.");
-        }
+		if (paymentMethod) {
+			const url = `finalizar.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}&formaPagamento=${paymentMethod}&bagagem=${bagagem}`;
+			efetuarPagamento(`${cpf}`,`${idVoo}`,`${assentoSelecionado}`,`${paymentMethod}`,`${bagagem}`);
+		} else {
+			alert("Por favor, selecione uma forma de pagamento.");
+		}
+        
+		
     });
 	
+	function efetuarPagamento(cpfInput,idVooInput,assentoSelecionadoInput,paymentMethodInput,bagagemInput){
+		const reservaDTO = {
+            cpf: cpfInput,
+            idVoo: idVooInput,
+            assentoSelecionado: assentoSelecionadoInput,
+            formaPagamento: paymentMethodInput,
+            bagagem: bagagemInput
+        };
+		
+		fetch('http://localhost:8080/start', {
+        method: 'POST',
+		headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+        body: JSON.stringify(reservaDTO)
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Erro ao efetuar pagamento');
+			} else {
+				const url = `finalizar.html?cpf=${cpf}&idVoo=${idVoo}&assentoSelecionado=${assentoSelecionado}&formaPagamento=${paymentMethodInput}&bagagem=${bagagem}`;
+				window.location.href = url;
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log('Pagamento efetuado com sucesso:', data);
+		})
+		.catch(error => {
+		});
+	}
 	
 	
 	window.onload = async function() {
@@ -134,7 +166,20 @@
             console.error('Erro ao buscar valor do assento:', error);
             alert('Não foi possível obter o valor do assento. Tente novamente.');
         });
+		
+		formatarCPF();
     };
+	
+	function formatarCPF() {
+		var campo = document.getElementById("campoCPF").innerHTML;
+		let cpf = campo.replace(/\D/g, '');
+
+		cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+		cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+		cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+		campo = cpf;
+		document.getElementById("campoCPF").innerHTML = cpf;
+	}
 
 </script>
 
