@@ -109,6 +109,27 @@
             alert("Por favor, selecione uma forma de pagamento.");
         }
     });
+	
+	
+	
+	window.onload = async function() {
+            fetch(`http://localhost:8080/vooassento/${assentoSelecionado}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao buscar informações do assento');
+            }
+            return response.json();
+        })
+        .then(data => {
+			document.getElementById('paymentDetails').innerHTML = document.getElementById('paymentDetails').innerHTML + 
+			`<br><b>Assento:</b> ${data.nomeAssento} - Valor: R$ ${data.valorAssento.toFixed(2)}`;
+        })
+        .catch(error => {
+            console.error('Erro ao buscar valor do assento:', error);
+            alert('Não foi possível obter o valor do assento. Tente novamente.');
+        });
+    };
+
 </script>
 
 </body>
