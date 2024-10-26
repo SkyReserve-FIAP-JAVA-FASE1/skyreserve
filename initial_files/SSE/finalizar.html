@@ -50,16 +50,32 @@
         button:hover {
             background-color: #218838;
         }
+		
+		button.cancelar {
+            padding: 15px;
+            margin: 20px 0;
+            width: 80%; /* Largura adaptável */
+            border: none;
+            border-radius: 4px;
+            background-color: #b06161;
+            color: white;
+            cursor: pointer;
+            font-size: 20px; /* Tamanho da fonte do botão */
+        }
+        button.cancelar:hover {
+            background-color: #633030;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Confirmar Reserva</h1>
+    <h1>Reserva Confirmada</h1>
     
     <div id="paymentDetails"></div>
     
-    <button id="confirmButton">Confirmar Reserva</button>
+    <button id="confirmButton" class="cancelar">Voltar</button>
+    <button id="imprimir">Imprimir boleto</button>
 </div>
 
 <script>
@@ -69,6 +85,7 @@
     const assentoSelecionado = params.get('assentoSelecionado');
     const formaPagamento = params.get('formaPagamento');
 	const bagagem = params.get('bagagem');
+	var imprimiu = false;
 
     const paymentDetails = `
         <p><strong>CPF:</strong> <span id="campoCPF" >${cpf}</span></p>
@@ -79,9 +96,16 @@
 
     document.getElementById('paymentDetails').innerHTML = paymentDetails;
 	
-    document.getElementById('confirmButton').addEventListener('click', function() {
+    document.getElementById('imprimir').addEventListener('click', function() {
+		imprimiu = true;
         finalizandoReserva();
-		window.location.href = 'index.html';
+    });
+	
+	document.getElementById('confirmButton').addEventListener('click', function() {
+		if(imprimiu == true)
+			window.location.href = 'index.html';
+			else
+			alert('Favor clicar em imprimir o comprovante!')
     });
 	
 	
@@ -112,7 +136,7 @@
 	
 	
 	function finalizandoReserva(){
-		alert("Reserva confirmada!");
+		alert("Imprimindo Reserva...");
 	}
 	
 	function formatarCPF() {
