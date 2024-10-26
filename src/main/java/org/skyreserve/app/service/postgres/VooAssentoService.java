@@ -86,6 +86,7 @@ public class VooAssentoService {
                     entity.setReservado(objDTO.isReservado());
                     entity.setAssentoId(objDTO.getAssentoId());
                     entity.setNomeAssento(objDTO.getNomeAssento());
+                    entity.setValorAssento(objDTO.getValorAssento());
                     return repository.save(entity);
                 })
                 .switchIfEmpty(Mono.error(new ObjectNotFoundException("Reserva de Voo assento não encontrado com id: " + id)));

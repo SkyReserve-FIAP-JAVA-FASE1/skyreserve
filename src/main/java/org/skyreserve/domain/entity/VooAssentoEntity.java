@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -21,6 +22,7 @@ public class VooAssentoEntity implements Serializable {
     private Long assentoId;
     private String nomeAssento;
     private boolean reservado = false;
+    private BigDecimal valorAssento = BigDecimal.ZERO;
 
     public VooAssentoEntity(VooAssentoDTO dto) {
         if (dto != null) {
@@ -29,6 +31,7 @@ public class VooAssentoEntity implements Serializable {
             this.assentoId = dto.getAssentoId();
             this.reservado = dto.isReservado();
             this.nomeAssento = dto.getNomeAssento();
+            this.valorAssento = dto.getValorAssento();
         }
     }
 }
