@@ -3,6 +3,7 @@ package org.skyreserve.app.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.kafka.producer.KafkaProducer;
+import org.skyreserve.domain.dto.RequisicaoReservaDTO;
 import org.skyreserve.domain.dto.ReservaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +30,9 @@ public class ApplicacaoController {
     private String topic;
 
     @PostMapping("/start")
-    public Mono<Void> start(@RequestBody ReservaDTO reservaDTO) throws IOException {
+    public Mono<Void> start(@RequestBody RequisicaoReservaDTO requisicaoReservaDTO) throws IOException {
         log.info("Iniciando a aplicação.");
-        String payload = objectMapper.writeValueAsString(reservaDTO);
+        String payload = objectMapper.writeValueAsString(requisicaoReservaDTO);
         return producer.send(topic, payload);
     }
 

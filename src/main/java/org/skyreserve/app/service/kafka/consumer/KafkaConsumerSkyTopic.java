@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.skyreserve.app.service.postgres.ReservaService;
+import org.skyreserve.domain.dto.RequisicaoReservaDTO;
 import org.skyreserve.domain.dto.ReservaDTO;
+import org.skyreserve.infra.mapper.RequisicaoReservaMapper;
 import org.skyreserve.infra.mapper.ReservaMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -21,6 +23,7 @@ public class KafkaConsumerSkyTopic {
     private final ObjectMapper objectMapper;
     private final ReservaService service;
     private final ReservaMapper reservaMapper;
+    private final RequisicaoReservaMapper requisicaoReservaMapper;
 
     public KafkaConsumerSkyTopic(
             KafkaReceiver<String, String> kafkaReceiver,
@@ -28,11 +31,12 @@ public class KafkaConsumerSkyTopic {
             ReservaService service, ReservaMapper reservaMapper,
             @Value("${spring.kafka.bootstrap-servers}") String url,
             @Value("${topics.skytopic}") String topic,
-            @Value("${spring.kafka.consumer.group-id}") String groupId) {
+            @Value("${spring.kafka.consumer.group-id}") String groupId, RequisicaoReservaMapper requisicaoReservaMapper) {
         this.kafkaReceiver = kafkaReceiver;
         this.objectMapper = objectMapper;
         this.service = service;
         this.reservaMapper = reservaMapper;
+        this.requisicaoReservaMapper = requisicaoReservaMapper;
     }
 
     @EventListener(ContextRefreshedEvent.class)
@@ -42,8 +46,8 @@ public class KafkaConsumerSkyTopic {
             try {
                 log.info("Tópico consumido com sucesso no Kafka...");
 
-                ReservaDTO reservaDTO = objectMapper.readValue(message, new TypeReference<>() {
-                });
+                RequisicaoReservaDTO requisicaoReservaDTO = objectMapper.readValue(message, new TypeReference<>() {});
+                ReservaDTO reservaDTO = requisicaoReservaMapper.execute(requisicaoReservaDTO);
                 log.info("Mapper realizado com sucesso");
 
                 return service.save(reservaDTO).doOnSuccess(entity -> {
