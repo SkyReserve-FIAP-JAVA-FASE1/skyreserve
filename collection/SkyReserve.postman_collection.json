@@ -17,7 +17,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.79\r\n}\r\n",
+							"raw": "{\r\n    \"cpf\": \"22222222222\",\r\n    \"idVoo\": \"1\",\r\n    \"assentoSelecionado\": \"1\",\r\n    \"formaPagamento\": \"PIX\",\r\n    \"bagagem\": \"true\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -33,37 +33,6 @@
 							"port": "8080",
 							"path": [
 								"start"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Tela inicial",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.79\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								""
 							]
 						}
 					},
@@ -156,7 +125,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/passageiro/cpf/22245678901",
+							"raw": "http://localhost:8080/passageiro/cpf/22222222222",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -165,7 +134,7 @@
 							"path": [
 								"passageiro",
 								"cpf",
-								"22245678901"
+								"22222222222"
 							]
 						}
 					},
@@ -368,7 +337,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nome\": \"F1A4\",\r\n    \"descricao\": \"Fileira 1 - Assento 4\",\r\n    \"reservado\": false,\r\n    \"aeronaveId\": 1\r\n}",
+							"raw": "{\r\n    \"nome\": \"F1A5\",\r\n    \"descricao\": \"Fileira 1 - Assento 5\",\r\n    \"aeronaveId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -397,7 +366,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": 1,\r\n    \"nome\": \"F1A1\",\r\n    \"descricao\": \"Fileira 1 - Assento 1\",\r\n    \"reservado\": true,\r\n    \"aeronaveId\": 1\r\n}",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"nome\": \"F1A1\",\r\n    \"descricao\": \"Fileira 1 - Assento 1\",\r\n    \"aeronaveId\": 1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -420,24 +389,12 @@
 					"response": []
 				},
 				{
-					"name": "FindAll",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "Buscar Assento por Aeronave",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://localhost:8080/assento/",
+							"raw": "http://localhost:8080/assento/aeronave/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -445,7 +402,8 @@
 							"port": "8080",
 							"path": [
 								"assento",
-								""
+								"aeronave",
+								"1"
 							]
 						}
 					},
@@ -582,6 +540,72 @@
 					"response": []
 				},
 				{
+					"name": "Listar Voos por Parâmetros",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/voo/search?origem=São Paulo&destino=Rio de Janeiro&dataHoraPartidaMin=2000-01-31T00:00:00&dataHoraPartidaMax=2028-02-01T00:00:00&page=0&size=3&orderBy=data_hora_chegada&direction=ASC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"voo",
+								"search"
+							],
+							"query": [
+								{
+									"key": "origem",
+									"value": "São Paulo"
+								},
+								{
+									"key": "destino",
+									"value": "Rio de Janeiro"
+								},
+								{
+									"key": "dataHoraPartidaMin",
+									"value": "2000-01-31T00:00:00"
+								},
+								{
+									"key": "dataHoraPartidaMax",
+									"value": "2028-02-01T00:00:00"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "3"
+								},
+								{
+									"key": "orderBy",
+									"value": "data_hora_chegada"
+								},
+								{
+									"key": "direction",
+									"value": "ASC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Save",
 					"request": {
 						"method": "POST",
@@ -633,6 +657,256 @@
 							"port": "8080",
 							"path": [
 								"aeronave",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "VooAssento",
+			"item": [
+				{
+					"name": "Buscar por ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar VooAssento por VooId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/voo/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
+								"voo",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bloquear Assento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/bloquear/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
+								"bloquear",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Desbloquear Assento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/desbloquear/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
+								"desbloquear",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Estado do Assento",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/estado/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
+								"estado",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"nomeAssento\": \"F1A1\",\r\n    \"reservado\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"vooId\": 1,\r\n    \"assentoId\": 5,\r\n    \"nomeAssento\": \"F1A5\",\r\n    \"reservado\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/vooassento/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"vooassento",
 								"1"
 							]
 						}
@@ -998,7 +1272,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 3,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.75,\r\n    \"reembolsoId\": 1\r\n}\r\n",
+							"raw": "{\r\n    \"passageiroId\": 1,\r\n    \"vooId\": 1,\r\n    \"assentoId\": 1,\r\n    \"pagamentoId\": 1,\r\n    \"dataDaReserva\": \"2024-10-11T15:30:00\",\r\n    \"bagagem\": true,\r\n    \"tipoVoo\": \"IDA_E_VOLTA\",\r\n    \"valorReserva\": 350.75,\r\n    \"reembolsoId\": 1\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
